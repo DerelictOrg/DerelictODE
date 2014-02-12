@@ -36,22 +36,19 @@ private {
     import derelict.util.loader;
     import derelict.util.system;
 
-    static if( Derelict_OS_Windows )
-    {
+    static if( Derelict_OS_Windows ) {
         version( DerelictODE_DoublePrecision )
             enum libNames = "ode_double.dll,ode_doubled.dll,ode.dll";
         else
             enum libNames = "ode_single.dll,ode_singled.dll,ode.dll";
     }
-    else static if( Derelict_OS_Mac )
-    {
+    else static if( Derelict_OS_Mac ) {
         version( DerelictODE_DoublePrecision )
             enum libNames = "libode_double.dylib,libode_doubled.dylib,libode.dylib";
         else
             enum libNames = "libode_single.dylib,libode_singled.dylib,libode.dylib";
     }
-    else static if( Derelict_OS_Posix )
-    {
+    else static if( Derelict_OS_Posix ) {
         version( DerelictODE_DoublePrecision )
             enum libNames = "libode_double.so,libode_doubled.so,libode.so,libode.so.3";
         else
