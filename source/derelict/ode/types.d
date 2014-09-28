@@ -31,6 +31,7 @@ private {
     import std.math;
     import core.vararg;
     import core.stdc.config;
+    import core.stdc.time;
 }
 
 // odeconfig.h
@@ -395,6 +396,7 @@ extern( C ) nothrow {
 }
 
 // objects.h
+enum dWORLDSTEP_THREADCOUNT_UNLIMITED = 0U;
 enum dWORLDSTEP_RESERVEFACTOR_DEFAULT = 1.2f;
 enum dWORLDSTEP_RESERVESIZE_DEFAULT = 65536U;
 
@@ -745,6 +747,68 @@ void dMultiplyAdd2_333( dReal* res, in dReal* a, in dReal* b ) {
     dAddVectors3( res + 4, res + 4, tmp.ptr );
     dMultiplyHelper0_331( tmp.ptr, b, a + 8 );
     dAddVectors3( res + 8, res + 8, tmp.ptr );
+}
+
+// threading.h
+struct dxThreadingImplementation;
+alias dThreadingImplementationID = dxThreadingImplementation*;
+
+alias dmutexindex_t = uint;
+struct dxMutexGroup;
+alias dMutexGroupID = dxMutexGroup*;
+
+extern( C ) @nogc nothrow {
+    alias dMutexGroupAllocFunction = dMutexGroupID function( dThreadingImplementationID,dmutexindex_t,const( char* )* );
+    alias dMutexGroupFreeFunction = void function( dThreadingImplementationID,dMutexGroupID );
+    alias dMutexGroupMutexLockFunction = void function( dThreadingImplementationID,dMutexGroupID,dmutexindex_t );
+    alias dMutexGroupMutexUnlockFunction = void function( dThreadingImplementationID,dMutexGroupID,dmutexindex_t );
+}
+
+struct dxCallReleasee;
+alias dCallReleaseeID = dxCallReleasee*;
+
+struct dxCallWait;
+alias dCallWaitID = dxCallWait*;
+
+alias ddependencycount_t = size_t;
+alias ddependencychange_t = ptrdiff_t;
+alias dcallindex_t = size_t;
+
+struct dThreadedWaitTime {
+    time_t wait_sec;
+    c_ulong wait_nsec;
+}
+
+extern( C ) @nogc nothrow {
+    alias dThreadedCallFunction = int function( void*,dcallindex_t,dCallReleaseeID );
+    alias dThreadedCallWaitAllocFunction = dCallWaitID function( dThreadingImplementationID );
+    alias dThreadedCallWaitResetFunction = void function( dThreadingImplementationID,dCallWaitID );
+    alias dThreadedCallWaitFreeFunction = void function( dThreadingImplementationID,dCallWaitID );
+    alias dThreadedCallPostFunction = void function( dThreadingImplementationID,int*,dCallReleaseeID*,ddependencycount_t,dCallReleaseeID,dCallWaitID,dThreadedCallFunction*,void*,dcallindex_t,const( char )* );
+    alias dThreadedCallDependenciesCountAlterFunction = void function( dThreadingImplementationID,dCallReleaseeID,ddependencychange_t );
+    alias dThreadedCallWaitFunction = void function( dThreadingImplementationID,int*,dCallWaitID,const( dThreadedWaitTime )*,const( char )* );
+    alias dThreadingImplThreadCountRetrieveFunction = uint function( dThreadingImplementationID );
+    alias dThreadingImplResourcesForCallsPreallocateFunction = int function( dThreadingImplementationID,ddependencycount_t );
+}
+
+struct dThreadingFunctionsInfo {
+    uint struct_size;
+
+    dMutexGroupAllocFunction* alloc_mutex_group;
+    dMutexGroupFreeFunction* free_mutex_group;
+    dMutexGroupMutexLockFunction* lock_group_mutex;
+    dMutexGroupMutexUnlockFunction* unlock_group_mutex;
+
+    dThreadedCallWaitAllocFunction* alloc_call_wait;
+    dThreadedCallWaitResetFunction* reset_call_wait;
+    dThreadedCallWaitFreeFunction* free_call_wait;
+
+    dThreadedCallPostFunction* post_call;
+    dThreadedCallDependenciesCountAlterFunction* alter_call_dependencies_count;
+    dThreadedCallWaitFunction* wait_call;
+
+    dThreadingImplThreadCountRetrieveFunction* retrieve_thread_count;
+    dThreadingImplResourcesForCallsPreallocateFunction* preallocate_resources_for_calls;
 }
 
 // timer.h

@@ -49,7 +49,7 @@ extern( C ) @nogc nothrow {
     alias da_dGeomSetQuaternion = void function( dGeomID,ref const( dQuaternion ) );
     alias da_dGeomGetPosition = dReal* function( dGeomID );
     alias da_dGeomCopyPosition = void function( dGeomID,ref dVector3 );
-    alias  da_dGeomGetRotation = dReal* function( dGeomID );
+    alias da_dGeomGetRotation = dReal* function( dGeomID );
     alias da_dGeomCopyRotation = void function( dGeomID,ref dMatrix3 );
     alias da_dGeomGetQuaternion = void function( dGeomID,ref dQuaternion );
     alias da_dGeomGetAABB = void function( dGeomID,dReal* );
@@ -139,6 +139,8 @@ extern( C ) @nogc nothrow {
     alias da_dGeomGetClassData = void* function( dGeomID );
     alias da_dCreateGeom = dGeomID function( int );
     alias da_dSetColliderOverride = void function( int,int,dColliderFn );
+
+    // collision_space.h
     alias da_dSimpleSpaceCreate = dSpaceID function( dSpaceID );
     alias da_dHashSpaceCreate = dSpaceID function( dSpaceID );
     alias da_dQuadTreeSpaceCreate = dSpaceID function( dSpaceID,ref const( dVector3 ),ref const( dVector3 ),int );
@@ -159,6 +161,8 @@ extern( C ) @nogc nothrow {
     alias da_dSpaceGetNumGeoms = int function( dSpaceID );
     alias da_dSpaceGetGeom = dGeomID function( dSpaceID,int );
     alias da_dSpaceGetClass = int function( dSpaceID );
+
+    // collision_trimash.h
     alias da_dGeomTriMeshDataCreate = dTriMeshDataID function();
     alias da_dGeomTriMeshDataDestroy = void function( dTriMeshDataID );
     alias da_dGeomTriMeshDataSet = void function( dTriMeshDataID,int,void* );
@@ -193,6 +197,8 @@ extern( C ) @nogc nothrow {
     alias da_dGeomTriMeshGetPoint = void function( dGeomID,int,dReal,dReal,ref dVector3 );
     alias da_dGeomTriMeshGetTriangleCount = int function( dGeomID );
     alias da_dGeomTriMeshDataUpdate = void function( dTriMeshDataID );
+
+    // error.h
     alias da_dSetErrorHandler = void function( dMessageFunction );
     alias da_dSetDebugHandler = void function( dMessageFunction );
     alias da_dSetMessageHandler = void function( dMessageFunction );
@@ -202,7 +208,11 @@ extern( C ) @nogc nothrow {
     alias da_dError = void function( int,const( char )*,... );
     alias da_dDebug = void function( int,const( char )*,... );
     alias da_dMessage = void function( int,const( char )*,... );
+
+    // export-dif.h
     alias da_dWorldExportDIF = void function( dWorldID, FILE*, const( char )* );
+
+    // mass.h
     alias da_dMassCheck = int function( const( dMass )* );
     alias da_dMassSetZero = void function( dMass* );
     alias da_dMassSetParameters = void function( dMass*,dReal,dReal,dReal,dReal,dReal,dReal,dReal,dReal,dReal,dReal );
@@ -220,6 +230,8 @@ extern( C ) @nogc nothrow {
     alias da_dMassTranslate = void function( dMass*,dReal,dReal,dReal );
     alias da_dMassRotate = void function( dMass*,ref const( dMatrix3 ) );
     alias da_dMassAdd = void function( dMass*,const( dMass )* );
+
+    // matrix.h
     alias da_dSetZero = void function( dReal*,int );
     alias da_dSetValue = void function( dReal*,int,dReal );
     alias da_dDot = dReal function( const( dReal )*,const( dReal )*,int );
@@ -238,6 +250,8 @@ extern( C ) @nogc nothrow {
     alias da_dLDLTAddTL = void function( dReal*,dReal*,const( dReal )*,int,int );
     alias da_dLDLTRemove = void function( dReal**,const( int )*,dReal*,dReal*,int,int,int,int );
     alias da_dRemoveRowCol = void function( dReal*,int,int,int );
+
+    // memory.h
     alias da_dSetAllocHandler = void function( dAllocFunction );
     alias da_dSetReallocHandler = void function( dReallocFunction );
     alias da_dSetFreeHandler = void function( dFreeFunction );
@@ -247,18 +261,22 @@ extern( C ) @nogc nothrow {
     alias da_dAlloc = void* function( size_t );
     alias da_dRealloc = void* function( void*,size_t,size_t );
     alias da_dFree = void function( void*,size_t );
+
+    // misch.h
     alias da_dTestRand = int function();
     alias da_dRand = c_ulong function();
     alias da_dRandGetSeed = c_ulong function();
     alias da_dRandSetSeed = void function( c_ulong );
     alias da_dRandInt = int function( int );
     alias da_dRandReal = dReal function();
-    alias da_dPrintMatrix = void function( const( dReal )*,int,int,char*,FILE* );
+    alias da_dPrintMatrix = void function( const( dReal )*,int,int,const( char )*,FILE* );
     alias da_dMakeRandomVector = void function( dReal,int,dReal );
     alias da_dMakeRandomMatrix = void function( dReal*,int,int,dReal );
     alias da_dClearUpperTriangle = void function( dReal*,int );
     alias da_dMaxDifference = dReal function( const( dReal )*,const( dReal )*,int,int );
     alias da_dMaxDifferenceLowerTriangle = dReal function( const( dReal )*,const( dReal )*,int );
+
+    // objects.h
     alias da_dWorldCreate = dWorldID function();
     alias da_dWorldDestroy = void function( dWorldID );
     alias da_dWorldSetGravity = void function( dWorldID,dReal,dReal,dReal );
@@ -267,10 +285,13 @@ extern( C ) @nogc nothrow {
     alias da_dWorldGetERP = dReal function( dWorldID );
     alias da_dWorldSetCFM = void function( dWorldID,dReal );
     alias da_dWorldGetCFM = dReal function( dWorldID );
+    alias da_dWorldSetStepIslandsProcessingMaxThreadCount = void function( dWorldID,uint );
+    alias da_dWorldGetStepIslandsProcessingMaxThreadCount = uint function( dWorldID );
     alias da_dWorldUseSharedWorkingMemory = int function( dWorldID, dWorldID );
     alias da_dWorldCleanupWorkingMemory = void function( dWorldID );
     alias da_dWorldSetStepMemoryReservationPolicy = int function( dWorldID, const( dWorldStepReserveInfo )* );
     alias da_dWorldSetStepMemoryManager = int function( dWorldID, const( dWorldStepMemoryFunctionsInfo )* );
+    alias da_dWorldSetStepThreadingImplementation = void function( dWorldID,const( dThreadingFunctionsInfo)*,dThreadingImplementationID);
     alias da_dWorldStep = int function( dWorldID,dReal );
     alias da_dWorldImpulseToForce = void function( dWorldID,dReal,dReal,dReal,dReal,ref dVector3 );
     alias da_dWorldQuickStep = int function( dWorldID,dReal );
@@ -401,6 +422,9 @@ extern( C ) @nogc nothrow {
     alias da_dJointCreateAMotor = dJointID function( dWorldID,dJointGroupID );
     alias da_dJointCreateLMotor = dJointID function( dWorldID,dJointGroupID );
     alias da_dJointCreatePlane2D = dJointID function( dWorldID,dJointGroupID );
+    alias da_dJointCreateDBall = dJointID function( dWorldID,dJointGroupID );
+    alias da_dJointCreateDHinge = dJointID function( dWorldID,dJointGroupID );
+    alias da_dJointCreateTransmission = dJointID function( dWorldID, dJointGroupID );
     alias da_dJointDestroy = void function( dJointID );
     alias da_dJointGroupCreate = dJointGroupID function( int );
     alias da_dJointGroupDestroy = void function( dJointGroupID );
@@ -543,10 +567,54 @@ extern( C ) @nogc nothrow {
     alias da_dJointGetLMotorAxis = void function( dJointID,int,ref dVector3 );
     alias da_dJointGetLMotorParam = dReal function( dJointID,int );
     alias da_dJointGetFixedParam = dReal function( dJointID,int );
+    alias da_dJointGetTransmissionContactPoint1 = void function( dJointID,ref dVector3 );
+    alias da_dJointGetTransmissionContactPoint2 = void function( dJointID,ref dVector3 );
+    alias da_dJointSetTransmissionAxis1 = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointGetTransmissionAxis1 = void function( dJointID,ref dVector3 );
+    alias da_dJointSetTransmissionAxis2 = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointGetTransmissionAxis2 = void function( dJointID,ref dVector3 );
+    alias da_dJointSetTransmissionAnchor1 = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointGetTransmissionAnchor1 = void function( dJointID,ref dVector3 );
+    alias da_dJointSetTransmissionAnchor2 = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointGetTransmissionAnchor2 = void function( dJointID,ref dVector3 );
+    alias da_dJointSetTransmissionParam = void function( dJointID,int,dReal );
+    alias da_dJointGetTransmissionParam = dReal function( dJointID,int );
+    alias da_dJointSetTransmissionMode = void function( dJointID,int );
+    alias da_dJointGetTransmissionMode = int function( dJointID );
+    alias da_dJointSetTransmissionRatio = void function( dJointID,dReal );
+    alias da_dJointGetTransmissionRatio = dReal function( dJointID );
+    alias da_dJointSetTransmissionAxis = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointGetTransmissionAxis = void function( dJointID,ref dVector3 );
+    alias da_dJointGetTransmissionAngle1 = dReal function( dJointID );
+    alias da_dJointGetTransmissionAngle2 = dReal function( dJointID );
+    alias da_dJointGetTransmissionRadius1 = dReal function( dJointID );
+    alias da_dJointGetTransmissionRadius2 = dReal function( dJointID );
+    alias da_dJointSetTransmissionRadius1 = void function( dJointID,dReal );
+    alias da_dJointSetTransmissionRadius2 = void function( dJointID,dReal );
+    alias da_dJointGetTransmissionBacklash = dReal function( dJointID );
+    alias da_dJointSetTransmissionBacklash = void function( dJointID,dReal );
+    alias da_dJointSetDBallAnchor1 = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointSetDBallAnchor2 = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointGetDBallAnchor1 = void function( dJointID,ref dVector3 );
+    alias da_dJointGetDBallAnchor2 = void function( dJointID,ref dVector3 );
+    alias da_dJointGetDBallDistance = dReal function( dJointID );
+    alias da_dJointSetDBallParam = void function( dJointID,int,dReal );
+    alias da_dJointGetDBallParam = dReal function( dJointID,int );
+    alias da_dJointSetDHingeAxis = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointGetDHingeAxis = void function( dJointID,ref dVector3 );
+    alias da_dJointSetDHingeAnchor1 = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointSetDHingeAnchor2 = void function( dJointID,dReal,dReal,dReal );
+    alias da_dJointGetDHingeAnchor1 = void function( dJointID,ref dVector3 );
+    alias da_dJointGetDHingeAnchor2 = void function( dJointID,ref dVector3 );
+    alias da_dJointGetDHingeDistance = dReal function( dJointID );
+    alias da_dJointSetDHingeParam = void function( dJointID,int,dReal );
+    alias da_dJointGetDHingeParam = dReal function( dJointID,int );
     alias da_dConnectingJoint = dJointID function( dBodyID,dBodyID );
     alias da_dConnectingJointList = int function( dBodyID,dBodyID,dJointID* );
     alias da_dAreConnected = int function( dBodyID,dBodyID );
     alias da_dAreConnectedExcluding = int function( dBodyID,dBodyID,int );
+
+
     alias da_dInitODE = void function();
     alias da_dInitODE2 = int function( uint );
     alias da_dAllocateODEDataForThread = int function( uint );
@@ -688,6 +756,7 @@ __gshared {
     da_dGeomGetClassData dGeomGetClassData;
     da_dCreateGeom dCreateGeom;
     da_dSetColliderOverride dSetColliderOverride;
+
     da_dSimpleSpaceCreate dSimpleSpaceCreate;
     da_dHashSpaceCreate dHashSpaceCreate;
     da_dQuadTreeSpaceCreate dQuadTreeSpaceCreate;
@@ -708,6 +777,7 @@ __gshared {
     da_dSpaceGetNumGeoms dSpaceGetNumGeoms;
     da_dSpaceGetGeom dSpaceGetGeom;
     da_dSpaceGetClass dSpaceGetClass;
+
     da_dGeomTriMeshDataCreate dGeomTriMeshDataCreate;
     da_dGeomTriMeshDataDestroy dGeomTriMeshDataDestroy;
     da_dGeomTriMeshDataSet dGeomTriMeshDataSet;
@@ -751,7 +821,9 @@ __gshared {
     da_dError dError;
     da_dDebug dDebug;
     da_dMessage dMessage;
+
     da_dWorldExportDIF dWorldExportDIF;
+
     da_dMassCheck dMassCheck;
     da_dMassSetZero dMassSetZero;
     da_dMassSetParameters dMassSetParameters;
@@ -769,6 +841,7 @@ __gshared {
     da_dMassTranslate dMassTranslate;
     da_dMassRotate dMassRotate;
     da_dMassAdd dMassAdd;
+
     da_dSetZero dSetZero;
     da_dSetValue dSetValue;
     da_dDot dDot;
@@ -787,6 +860,7 @@ __gshared {
     da_dLDLTAddTL dLDLTAddTL;
     da_dLDLTRemove dLDLTRemove;
     da_dRemoveRowCol dRemoveRowCol;
+
     da_dSetAllocHandler dSetAllocHandler;
     da_dSetReallocHandler dSetReallocHandler;
     da_dSetFreeHandler dSetFreeHandler;
@@ -808,6 +882,7 @@ __gshared {
     da_dClearUpperTriangle dClearUpperTriangle;
     da_dMaxDifference dMaxDifference;
     da_dMaxDifferenceLowerTriangle dMaxDifferenceLowerTriangle;
+
     da_dWorldCreate dWorldCreate;
     da_dWorldDestroy dWorldDestroy;
     da_dWorldSetGravity dWorldSetGravity;
@@ -817,9 +892,12 @@ __gshared {
     da_dWorldSetCFM dWorldSetCFM;
     da_dWorldGetCFM dWorldGetCFM;
     da_dWorldUseSharedWorkingMemory dWorldUseSharedWorkingMemory;
+    da_dWorldSetStepIslandsProcessingMaxThreadCount dWorldSetStepIslandsProcessingMaxThreadCount;
+    da_dWorldGetStepIslandsProcessingMaxThreadCount dWorldGetStepIslandsProcessingMaxThreadCount;
     da_dWorldCleanupWorkingMemory dWorldCleanupWorkingMemory;
     da_dWorldSetStepMemoryReservationPolicy dWorldSetStepMemoryReservationPolicy;
     da_dWorldSetStepMemoryManager dWorldSetStepMemoryManager;
+    da_dWorldSetStepThreadingImplementation dWorldSetStepThreadingImplementation;
     da_dWorldStep dWorldStep;
     da_dWorldImpulseToForce dWorldImpulseToForce;
     da_dWorldQuickStep dWorldQuickStep;
@@ -950,6 +1028,9 @@ __gshared {
     da_dJointCreateAMotor dJointCreateAMotor;
     da_dJointCreateLMotor dJointCreateLMotor;
     da_dJointCreatePlane2D dJointCreatePlane2D;
+    da_dJointCreateDBall dJointCreateDBall;
+    da_dJointCreateDHinge dJointCreateDHinge;
+    da_dJointCreateTransmission dJointCreateTransmission;
     da_dJointDestroy dJointDestroy;
     da_dJointGroupCreate dJointGroupCreate;
     da_dJointGroupDestroy dJointGroupDestroy;
@@ -1092,10 +1173,53 @@ __gshared {
     da_dJointGetLMotorAxis dJointGetLMotorAxis;
     da_dJointGetLMotorParam dJointGetLMotorParam;
     da_dJointGetFixedParam dJointGetFixedParam;
+    da_dJointGetTransmissionContactPoint1 dJointGetTransmissionContactPoint1;
+    da_dJointGetTransmissionContactPoint2 dJointGetTransmissionContactPoint2;
+    da_dJointSetTransmissionAxis1 dJointSetTransmissionAxis1;
+    da_dJointGetTransmissionAxis1 dJointGetTransmissionAxis1;
+    da_dJointSetTransmissionAxis2 dJointSetTransmissionAxis2;
+    da_dJointGetTransmissionAxis2 dJointGetTransmissionAxis2;
+    da_dJointSetTransmissionAnchor1 dJointSetTransmissionAnchor1;
+    da_dJointGetTransmissionAnchor1 dJointGetTransmissionAnchor1;
+    da_dJointSetTransmissionAnchor2 dJointSetTransmissionAnchor2;
+    da_dJointGetTransmissionAnchor2 dJointGetTransmissionAnchor2;
+    da_dJointSetTransmissionParam dJointSetTransmissionParam;
+    da_dJointGetTransmissionParam dJointGetTransmissionParam;
+    da_dJointSetTransmissionMode dJointSetTransmissionMode;
+    da_dJointGetTransmissionMode dJointGetTransmissionMode;
+    da_dJointSetTransmissionRatio dJointSetTransmissionRatio;
+    da_dJointGetTransmissionRatio dJointGetTransmissionRatio;
+    da_dJointSetTransmissionAxis dJointSetTransmissionAxis;
+    da_dJointGetTransmissionAxis dJointGetTransmissionAxis;
+    da_dJointGetTransmissionAngle1 dJointGetTransmissionAngle1;
+    da_dJointGetTransmissionAngle2 dJointGetTransmissionAngle2;
+    da_dJointGetTransmissionRadius1 dJointGetTransmissionRadius1;
+    da_dJointGetTransmissionRadius2 dJointGetTransmissionRadius2;
+    da_dJointSetTransmissionRadius1 dJointSetTransmissionRadius1;
+    da_dJointSetTransmissionRadius2 dJointSetTransmissionRadius2;
+    da_dJointGetTransmissionBacklash dJointGetTransmissionBacklash;
+    da_dJointSetTransmissionBacklash dJointSetTransmissionBacklash;
+    da_dJointSetDBallAnchor1 dJointSetDBallAnchor1;
+    da_dJointSetDBallAnchor2 dJointSetDBallAnchor2;
+    da_dJointGetDBallAnchor1 dJointGetDBallAnchor1;
+    da_dJointGetDBallAnchor2 dJointGetDBallAnchor2;
+    da_dJointGetDBallDistance dJointGetDBallDistance;
+    da_dJointSetDBallParam dJointSetDBallParam;
+    da_dJointGetDBallParam dJointGetDBallParam;
+    da_dJointSetDHingeAxis dJointSetDHingeAxis;
+    da_dJointGetDHingeAxis dJointGetDHingeAxis;
+    da_dJointSetDHingeAnchor1 dJointSetDHingeAnchor1;
+    da_dJointSetDHingeAnchor2 dJointSetDHingeAnchor2;
+    da_dJointGetDHingeAnchor1 dJointGetDHingeAnchor1;
+    da_dJointGetDHingeAnchor2 dJointGetDHingeAnchor2;
+    da_dJointGetDHingeDistance dJointGetDHingeDistance;
+    da_dJointSetDHingeParam dJointSetDHingeParam;
+    da_dJointGetDHingeParam dJointGetDHingeParam;
     da_dConnectingJoint dConnectingJoint;
     da_dConnectingJointList dConnectingJointList;
     da_dAreConnected dAreConnected;
     da_dAreConnectedExcluding dAreConnectedExcluding;
+
     da_dInitODE dInitODE;
     da_dInitODE2 dInitODE2;
     da_dAllocateODEDataForThread dAllocateODEDataForThread;
