@@ -109,8 +109,10 @@ extern( C ) @nogc nothrow {
     alias da_dGeomRayGetLength = dReal function( dGeomID );
     alias da_dGeomRaySet = void function( dGeomID,dReal,dReal,dReal,dReal,dReal,dReal );
     alias da_dGeomRayGet = void function( dGeomID,ref dVector3,ref dVector3 );
-    alias da_dGeomRaySetParams = void function( dGeomID,int,int );
-    alias da_dGeomRayGetParams = void function( dGeomID,int*,int* );
+    alias da_dGeomRaySetFirstContact = void function( dGeomID,int );
+    alias da_dGeomRayGetFirstContact = int function( dGeomID );
+    alias da_dGeomRaySetBackfaceCull = void function( dGeomID,int );
+    alias da_dGeomRayGetBackfaceCull = int function( dGeomID );
     alias da_dGeomRaySetClosestHit = void function( dGeomID,int );
     alias da_dGeomRayGetClosestHit = int function( dGeomID );
     alias da_dCreateGeomTransform = dGeomID function( dSpaceID );
@@ -279,6 +281,8 @@ extern( C ) @nogc nothrow {
     // objects.h
     alias da_dWorldCreate = dWorldID function();
     alias da_dWorldDestroy = void function( dWorldID );
+    alias da_dWorldSetData = void function( dWorldID,void* );
+    alias da_dWorldGetData = void* function( dWorldID );
     alias da_dWorldSetGravity = void function( dWorldID,dReal,dReal,dReal );
     alias da_dWorldGetGravity = void function( dWorldID,ref dVector3 );
     alias da_dWorldSetERP = void function( dWorldID,dReal );
@@ -515,6 +519,7 @@ extern( C ) @nogc nothrow {
     alias da_dJointGetHinge2Axis2 = void function( dJointID,ref dVector3 );
     alias da_dJointGetHinge2Param = dReal function( dJointID,int );
     alias da_dJointGetHinge2Angle1 = dReal function( dJointID );
+    alias da_dJointGetHinge2Angle2 = dReal function( dJointID );
     alias da_dJointGetHinge2Angle1Rate = dReal function( dJointID );
     alias da_dJointGetHinge2Angle2Rate = dReal function( dJointID );
     alias da_dJointGetUniversalAnchor = void function( dJointID,ref dVector3 );
@@ -732,17 +737,12 @@ __gshared {
     da_dGeomRayGetLength dGeomRayGetLength;
     da_dGeomRaySet dGeomRaySet;
     da_dGeomRayGet dGeomRayGet;
-    da_dGeomRaySetParams dGeomRaySetParams;
-    da_dGeomRayGetParams dGeomRayGetParams;
+    da_dGeomRaySetFirstContact dGeomRaySetFirstContact;
+    da_dGeomRayGetFirstContact dGeomRayGetFirstContact;
+    da_dGeomRaySetBackfaceCull dGeomRaySetBackfaceCull;
+    da_dGeomRayGetBackfaceCull dGeomRayGetBackfaceCull;
     da_dGeomRaySetClosestHit dGeomRaySetClosestHit;
     da_dGeomRayGetClosestHit dGeomRayGetClosestHit;
-    da_dCreateGeomTransform dCreateGeomTransform;
-    da_dGeomTransformSetGeom dGeomTransformSetGeom;
-    da_dGeomTransformGetGeom dGeomTransformGetGeom;
-    da_dGeomTransformSetCleanup dGeomTransformSetCleanup;
-    da_dGeomTransformGetCleanup dGeomTransformGetCleanup;
-    da_dGeomTransformSetInfo dGeomTransformSetInfo;
-    da_dGeomTransformGetInfo dGeomTransformGetInfo;
     da_dCreateHeightfield dCreateHeightfield;
     da_dGeomHeightfieldDataCreate dGeomHeightfieldDataCreate;
     da_dGeomHeightfieldDataDestroy dGeomHeightfieldDataDestroy;
@@ -891,6 +891,8 @@ __gshared {
 
     da_dWorldCreate dWorldCreate;
     da_dWorldDestroy dWorldDestroy;
+    da_dWorldSetData dWorldSetData;
+    da_dWorldGetData dWorldGetData;
     da_dWorldSetGravity dWorldSetGravity;
     da_dWorldGetGravity dWorldGetGravity;
     da_dWorldSetERP dWorldSetERP;
@@ -1127,6 +1129,7 @@ __gshared {
     da_dJointGetHinge2Axis2 dJointGetHinge2Axis2;
     da_dJointGetHinge2Param dJointGetHinge2Param;
     da_dJointGetHinge2Angle1 dJointGetHinge2Angle1;
+    da_dJointGetHinge2Angle2 dJointGetHinge2Angle2;
     da_dJointGetHinge2Angle1Rate dJointGetHinge2Angle1Rate;
     da_dJointGetHinge2Angle2Rate dJointGetHinge2Angle2Rate;
     da_dJointGetUniversalAnchor dJointGetUniversalAnchor;

@@ -136,17 +136,12 @@ class DerelictODELoader : SharedLibLoader {
         bindFunc( cast( void** )&dGeomRayGetLength, "dGeomRayGetLength" );
         bindFunc( cast( void** )&dGeomRaySet, "dGeomRaySet" );
         bindFunc( cast( void** )&dGeomRayGet, "dGeomRayGet" );
-        bindFunc( cast( void** )&dGeomRaySetParams, "dGeomRaySetParams" );
-        bindFunc( cast( void** )&dGeomRayGetParams, "dGeomRayGetParams" );
+        bindFunc( cast( void** )&dGeomRaySetFirstContact, "dGeomRaySetFirstContact" );
+        bindFunc( cast( void** )&dGeomRayGetFirstContact, "dGeomRayGetFirstContact" );
+        bindFunc( cast( void** )&dGeomRaySetBackfaceCull, "dGeomRaySetBackfaceCull" );
+        bindFunc( cast( void** )&dGeomRayGetBackfaceCull, "dGeomRayGetBackfaceCull" );
         bindFunc( cast( void** )&dGeomRaySetClosestHit, "dGeomRaySetClosestHit" );
         bindFunc( cast( void** )&dGeomRayGetClosestHit, "dGeomRayGetClosestHit" );
-        bindFunc( cast( void** )&dCreateGeomTransform, "dCreateGeomTransform" );
-        bindFunc( cast( void** )&dGeomTransformSetGeom, "dGeomTransformSetGeom" );
-        bindFunc( cast( void** )&dGeomTransformGetGeom, "dGeomTransformGetGeom" );
-        bindFunc( cast( void** )&dGeomTransformSetCleanup, "dGeomTransformSetCleanup" );
-        bindFunc( cast( void** )&dGeomTransformGetCleanup, "dGeomTransformGetCleanup" );
-        bindFunc( cast( void** )&dGeomTransformSetInfo, "dGeomTransformSetInfo" );
-        bindFunc( cast( void** )&dGeomTransformGetInfo, "dGeomTransformGetInfo" );
         bindFunc( cast( void** )&dCreateHeightfield, "dCreateHeightfield" );
         bindFunc( cast( void** )&dGeomHeightfieldDataCreate, "dGeomHeightfieldDataCreate" );
         bindFunc( cast( void** )&dGeomHeightfieldDataDestroy, "dGeomHeightfieldDataDestroy" );
@@ -306,6 +301,8 @@ class DerelictODELoader : SharedLibLoader {
         // objects.h
         bindFunc( cast( void** )&dWorldCreate, "dWorldCreate" );
         bindFunc( cast( void** )&dWorldDestroy, "dWorldDestroy" );
+        bindFunc( cast( void** )&dWorldSetData, "dWorldSetData" );
+        bindFunc( cast( void** )&dWorldGetData, "dWorldGetData" );
         bindFunc( cast( void** )&dWorldSetGravity, "dWorldSetGravity" );
         bindFunc( cast( void** )&dWorldGetGravity, "dWorldGetGravity" );
         bindFunc( cast( void** )&dWorldSetERP, "dWorldSetERP" );
@@ -542,6 +539,7 @@ class DerelictODELoader : SharedLibLoader {
         bindFunc( cast( void** )&dJointGetHinge2Axis2, "dJointGetHinge2Axis2" );
         bindFunc( cast( void** )&dJointGetHinge2Param, "dJointGetHinge2Param" );
         bindFunc( cast( void** )&dJointGetHinge2Angle1, "dJointGetHinge2Angle1" );
+        bindFunc( cast( void** )&dJointGetHinge2Angle2, "dJointGetHinge2Angle2" );
         bindFunc( cast( void** )&dJointGetHinge2Angle1Rate, "dJointGetHinge2Angle1Rate" );
         bindFunc( cast( void** )&dJointGetHinge2Angle2Rate, "dJointGetHinge2Angle2Rate" );
         bindFunc( cast( void** )&dJointGetUniversalAnchor, "dJointGetUniversalAnchor" );
