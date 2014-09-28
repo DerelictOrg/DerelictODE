@@ -614,18 +614,22 @@ extern( C ) @nogc nothrow {
     alias da_dAreConnected = int function( dBodyID,dBodyID );
     alias da_dAreConnectedExcluding = int function( dBodyID,dBodyID,int );
 
-
+    // odeinit.h
     alias da_dInitODE = void function();
     alias da_dInitODE2 = int function( uint );
     alias da_dAllocateODEDataForThread = int function( uint );
     alias da_dCleanupODEAllDataForThread = void function();
     alias da_dCloseODE = void function();
+
+    // odemath.h
     alias da_dSafeNormalize3 = int function( ref dVector3 );
     alias da_dSafeNormalize4 = int function( ref dVector4 );
     alias da_dNormalize3 = void function( ref dVector3 );
     alias da_dNormalize4 = void function( ref dVector4 );
     alias da_dPlaneSpace = void function( ref const( dVector3 ), ref dVector3, ref dVector3 );
     alias da_dOrthogonalizeR = void function( ref dMatrix3 );
+
+    // rotation.h
     alias da_dRSetIdentity = void function( ref dMatrix3 );
     alias da_dRFromAxisAndAngle = void function( ref dMatrix3,dReal,dReal,dReal,dReal );
     alias da_dRFromEulerAngles = void function( ref dMatrix3,dReal,dReal,dReal );
@@ -640,6 +644,8 @@ extern( C ) @nogc nothrow {
     alias da_dRfromQ = void function( ref dMatrix3,const( dQuaternion ) );
     alias da_dQfromR = void function( ref dQuaternion,ref const( dMatrix3 ) );
     alias da_dDQfromW = void function( ref dReal[4],ref const( dVector3 ),const( dQuaternion ) );
+
+    // timer.h
     alias da_dStopwatchReset = void function( dStopwatch* );
     alias da_dStopwatchStart = void function( dStopwatch* );
     alias da_dStopwatchStop = void function( dStopwatch* );
@@ -1231,6 +1237,7 @@ __gshared {
     da_dNormalize4 dNormalize4;
     da_dPlaneSpace dPlaneSpace;
     da_dOrthogonalizeR dOrthogonalizeR;
+
     da_dRSetIdentity dRSetIdentity;
     da_dRFromAxisAndAngle dRFromAxisAndAngle;
     da_dRFromEulerAngles dRFromEulerAngles;
@@ -1245,6 +1252,7 @@ __gshared {
     da_dRfromQ dRfromQ;
     da_dQfromR dQfromR;
     da_dDQfromW dDQfromW;
+
     da_dStopwatchReset dStopwatchReset;
     da_dStopwatchStart dStopwatchStart;
     da_dStopwatchStop dStopwatchStop;
