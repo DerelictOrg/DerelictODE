@@ -38,6 +38,7 @@ extern( C ) {
     alias nothrow char* function() da_dGetConfiguration;
     alias nothrow int function( const( char )* ) da_dCheckConfiguration;
 
+    // collision.h
     alias nothrow void function( dGeomID ) da_dGeomDestroy;
     alias nothrow void function( dGeomID,void* ) da_dGeomSetData;
     alias nothrow void* function( dGeomID ) da_dGeomGetData;

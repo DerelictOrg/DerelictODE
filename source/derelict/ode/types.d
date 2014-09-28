@@ -58,6 +58,7 @@ else
 
 // common.h
 alias M_PI = PI;
+alias M_PI_2 = PI_2;
 alias M_SQRT1_2 = SQRT1_2;
 
 static if( dSINGLE )
@@ -338,17 +339,22 @@ enum {
     dContactMotionN = 0x080,
     dContactSlip1 = 0x100,
     dContactSlip2 = 0x200,
+    dContactRolling = 0x400,
 
     dContactApprox0 = 0x0000,
     dContactApprox1_1 = 0x1000,
     dContactApprox1_2 = 0x2000,
-    dContactApprox1 = 0x3000
+    dContactApprox1_N = 0x4000,
+    dContactApprox1   = 0x7000,
 }
 
 struct dSurfaceParameters {
     int mode;
     dReal mu;
     dReal mu2;
+    dReal rho;
+    dReal rho2;
+    dReal rhoN;
     dReal bounce;
     dReal bounce_vel;
     dReal soft_erp;
