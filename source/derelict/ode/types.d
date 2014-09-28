@@ -303,7 +303,7 @@ struct dGeomClass {
 }
 
 // collision_space.h
-extern( C ) nothrow alias dNearCallback = void function( void*, dGeomID, dGeomID );
+extern( C ) @nogc nothrow alias dNearCallback = void function( void*, dGeomID, dGeomID );
 
 enum {
     dSAP_AXES_XYZ = ( ( 0 )|( 1<<2 )|( 2<<4 ) ),
