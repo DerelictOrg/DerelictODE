@@ -34,34 +34,44 @@ private {
 }
 
 // odeconfig.h
-alias int32 = int;
-alias uint32 = uint;
-alias int16 = short;
-alias uint16 = ushort;
-alias int8 = byte;
-alias uint8 = ubyte;
+alias dint64 = long;
+alias duint64 = ulong;
+alias dint32 = int;
+alias duint32 = uint;
+alias dint16 = short;
+alias duint16 = ushort;
+alias dint8 = byte;
+alias duint8 = ubyte;
 
-version( DerelictODE_DoublePrecision )
-    enum dInfinity = double.infinity;
-else
+version( DerelictODE_Single ) {
+    enum dDOUBLE = false;
+    enum dSINGLE = true;
+} else {
+    enum dDOUBLE = true;
+    enum dSINGLE = false;
+}
+
+static if( dSINGLE )
     enum dInfinity = float.infinity;
+else
+    enum dInfinity = double.infinity;
 
 // common.h
-version( DerelictODE_DoublePrecision )
-    alias dReal = double;
-else
-    alias dReal = float;
+alias M_PI = PI;
+alias M_SQRT1_2 = SQRT1_2;
 
-alias PI M_PI;
-alias SQRT1_2 M_SQRT1_2;
+static if( dSINGLE )
+    alias dReal = float;
+else
+    alias dReal = double;
 
 version ( DerelictOde_TriMesh_16Bit_Indices ) {
     version ( DerelictOde_TriMesh_GIMPACT )
-        alias dTriIndex = uint32;
+        alias dTriIndex = duint32;
     else
-        alias dTriIndex = uint16;
+        alias dTriIndex = duint16;
 } else {
-    alias dTriIndex = uint32;
+    alias dTriIndex = duint32;
 }
 
 int dPAD( int a ) {
@@ -88,16 +98,18 @@ dReal dFMod( dReal a, dReal b ) {
     return modf( a, c );
 }
 
-alias sqrt dSqrt;
-alias sin dSin;
-alias cos dCos;
-alias fabs dFabs;
-alias atan2 dAtan2;
-alias isnan dIsNan;
-alias copysign dCopySign;
-alias floor dFloor;
-alias ceil dCeil;
-alias nextafter dNextAfter;
+alias dSqrt = sqrt;
+alias dSin = sin;
+alias dCos = cos;
+alias dFabs = fabs;
+alias dAtan2 = atan2;
+alias dAcos = acos;
+alias dFMod = fmod;
+alias dFloor = floor;
+alias dCeil = ceil;
+alias dCopySign = copysign;
+alias dNextAfter = nextafter;
+alias dIsNan = isnan;
 
 struct dxWorld;
 struct dxSpace;
@@ -108,13 +120,13 @@ struct dxJointNode;
 struct dxJointGroup;
 struct dxWorldProcessThreadingManager;
 
-alias dxWorld* dWorldID;
-alias dxSpace* dSpaceID;
-alias dxBody* dBodyID;
-alias dxGeom* dGeomID;
-alias dxJoint* dJointID;
-alias dxJointGroup* dJointGroupID;
-alias dxWorldProcessThreadingManager* dWorldStepThreadingManagerId;
+alias dWorldID = dxWorld*;
+alias dSpaceID = dxSpace*;
+alias dBodyID = dxBody*;
+alias dGeomID = dxGeom*;
+alias dJointID = dxJoint*;
+alias dJointGroupID = dxJointGroup*;
+alias dWorldStepThreadingManagerId = dxWorldProcessThreadingManager*;
 
 enum {
     d_ERR_UNKNOWN = 0,
@@ -140,6 +152,9 @@ enum {
     dJointTypePR,
     dJointTypePU,
     dJointTypePiston,
+    dJointTypeDBall,
+    dJointTypeDHinge,
+    dJointTypeTransmission,
 }
 
 enum {
@@ -198,6 +213,12 @@ enum {
 enum {
     dAMotorUser  = 0,
     dAMotorEuler = 1,
+}
+
+enum {
+    dTransmissionParallelAxes = 0,
+    dTransmissionIntersectingAxes = 1,
+    dTransmissionChainDrive = 2,
 }
 
 struct dJointFeedback {

@@ -34,8 +34,10 @@ private {
 }
 
 extern( C ) {
+    // common.h
     alias nothrow char* function() da_dGetConfiguration;
     alias nothrow int function( const( char )* ) da_dCheckConfiguration;
+
     alias nothrow void function( dGeomID ) da_dGeomDestroy;
     alias nothrow void function( dGeomID,void* ) da_dGeomSetData;
     alias nothrow void* function( dGeomID ) da_dGeomGetData;
@@ -585,6 +587,7 @@ extern( C ) {
 __gshared {
     da_dGetConfiguration dGetConfiguration;
     da_dCheckConfiguration dCheckConfiguration;
+
     da_dGeomDestroy dGeomDestroy;
     da_dGeomSetData dGeomSetData;
     da_dGeomGetData dGeomGetData;
