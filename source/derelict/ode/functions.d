@@ -136,7 +136,7 @@ extern( C ) @nogc nothrow {
     alias da_dClosestLineSegmentPoints = void function( ref const( dVector3 ),ref const( dVector3 ),ref const( dVector3 ),ref const( dVector3 ),ref dVector3,ref dVector3 );
     alias da_dBoxTouchesBox = int function( ref const( dVector3 ),ref const( dMatrix3 ),ref const( dVector3 ),ref const( dVector3 ),ref const( dMatrix3 ),ref const( dVector3 ) );
     alias da_dBoxBox = int function( ref const( dVector3 ),ref const( dMatrix3 ),ref const( dVector3 ),ref const( dVector3 ),ref const( dMatrix3 ),ref const( dVector3 ),ref dVector3,dReal*,int*,int,dContactGeom*,int );
-    alias da_dInfiniteAABB = void function( dGeomID,ref dReal[6] );
+    //alias da_dInfiniteAABB = void function( dGeomID,ref dReal[6] );
     alias da_dCreateGeomClass = int function( const( dGeomClass )* );
     alias da_dGeomGetClassData = void* function( dGeomID );
     alias da_dCreateGeom = dGeomID function( int );
@@ -757,7 +757,7 @@ __gshared {
     da_dClosestLineSegmentPoints dClosestLineSegmentPoints;
     da_dBoxTouchesBox dBoxTouchesBox;
     da_dBoxBox dBoxBox;
-    da_dInfiniteAABB dInfiniteAABB;
+    //da_dInfiniteAABB dInfiniteAABB;
     da_dCreateGeomClass dCreateGeomClass;
     da_dGeomGetClassData dGeomGetClassData;
     da_dCreateGeom dCreateGeom;

@@ -156,7 +156,7 @@ class DerelictODELoader : SharedLibLoader {
         bindFunc( cast( void** )&dClosestLineSegmentPoints, "dClosestLineSegmentPoints" );
         bindFunc( cast( void** )&dBoxTouchesBox, "dBoxTouchesBox" );
         bindFunc( cast( void** )&dBoxBox, "dBoxBox" );
-        bindFunc( cast( void** )&dInfiniteAABB, "dInfiniteAABB" );
+        //bindFunc( cast( void** )&dInfiniteAABB, "dInfiniteAABB" );
         bindFunc( cast( void** )&dCreateGeomClass, "dCreateGeomClass" );
         bindFunc( cast( void** )&dGeomGetClassData, "dGeomGetClassData" );
         bindFunc( cast( void** )&dCreateGeom, "dCreateGeom" );
