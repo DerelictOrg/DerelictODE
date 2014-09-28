@@ -21,6 +21,8 @@ void main() {
 
 NOTE: Because of a bug in the ODE API, dPrintMatrix is not properly exported from the shared library. As such, it is disabled in this version of DerelictODE. It is fixed in the ODE repository and will be available in a future release of DerelictODE.
 
+dInfiniteAABB is also disabled in this version of DerelictODE, as it is not exported in the ODE 13.1 shared library.
+
 By default, DerelictODE is configured to load the double-precision version of ODE. If you want to load the single-precision version, declare "DerelictODE_Single" as a version in the build settings of your dub.json.
 
 [1]: https://bitbucket.org/odedevs/ode
