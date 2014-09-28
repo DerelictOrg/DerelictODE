@@ -296,7 +296,7 @@ class DerelictODELoader : SharedLibLoader {
         bindFunc( cast( void** )&dRandSetSeed, "dRandSetSeed" );
         bindFunc( cast( void** )&dRandInt, "dRandInt" );
         bindFunc( cast( void** )&dRandReal, "dRandReal" );
-        bindFunc( cast( void** )&dPrintMatrix, "dPrintMatrix" );
+        //bindFunc( cast( void** )&dPrintMatrix, "dPrintMatrix" );
         bindFunc( cast( void** )&dMakeRandomVector, "dMakeRandomVector" );
         bindFunc( cast( void** )&dMakeRandomMatrix, "dMakeRandomMatrix" );
         bindFunc( cast( void** )&dClearUpperTriangle, "dClearUpperTriangle" );

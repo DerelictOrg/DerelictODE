@@ -269,7 +269,7 @@ extern( C ) @nogc nothrow {
     alias da_dRandSetSeed = void function( c_ulong );
     alias da_dRandInt = int function( int );
     alias da_dRandReal = dReal function();
-    alias da_dPrintMatrix = void function( const( dReal )*,int,int,const( char )*,FILE* );
+    //alias da_dPrintMatrix = void function( const( dReal )*,int,int,const( char )*,FILE* );
     alias da_dMakeRandomVector = void function( dReal,int,dReal );
     alias da_dMakeRandomMatrix = void function( dReal*,int,int,dReal );
     alias da_dClearUpperTriangle = void function( dReal*,int );
@@ -882,7 +882,7 @@ __gshared {
     da_dRandSetSeed dRandSetSeed;
     da_dRandInt dRandInt;
     da_dRandReal dRandReal;
-    da_dPrintMatrix dPrintMatrix;
+    //da_dPrintMatrix dPrintMatrix;
     da_dMakeRandomVector dMakeRandomVector;
     da_dMakeRandomMatrix dMakeRandomMatrix;
     da_dClearUpperTriangle dClearUpperTriangle;
