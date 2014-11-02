@@ -28,10 +28,10 @@ DEALINGS IN THE SOFTWARE.
 module derelict.ode.functions;
 
 private {
-    import derelict.ode.types;
     import core.stdc.stdio;
     import core.stdc.config;
     import derelict.util.system;
+    import derelict.ode.types;
 }
 
 extern( C ) @nogc nothrow {
