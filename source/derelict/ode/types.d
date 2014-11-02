@@ -32,6 +32,7 @@ private {
     import core.vararg;
     import core.stdc.config;
     import core.stdc.time;
+    import derelict.util.system;
 }
 
 // odeconfig.h
