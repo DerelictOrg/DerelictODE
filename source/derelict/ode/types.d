@@ -31,6 +31,7 @@ private {
     import std.math;
     import core.vararg;
     import core.stdc.config;
+    import derelict.util.system;
 }
 
 // odeconfig.h
