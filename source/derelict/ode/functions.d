@@ -31,6 +31,7 @@ private {
     import derelict.ode.types;
     import core.stdc.stdio;
     import core.stdc.config;
+    import derelict.util.system;
 }
 
 extern( C ) @nogc nothrow {
