@@ -50,7 +50,7 @@ private {
     }
     else static if( Derelict_OS_Posix ) {
         static if( dDOUBLE )
-            enum libNames = "libode_double.so,libode_doubled.so,libode.so,libode.so.3";
+            enum libNames = "libode-double.so,libode_double.so,libode_doubled.so,libode.so,libode.so.3";
         else
             enum libNames = "libode_single.so,libode_singled.so,libode.so,libode.so.3";
     }

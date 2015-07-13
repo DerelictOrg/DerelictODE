@@ -112,7 +112,7 @@ alias dFloor = floor;
 alias dCeil = ceil;
 alias dCopySign = copysign;
 alias dNextAfter = nextafter;
-alias dIsNan = isnan;
+alias dIsNan = isNaN;
 
 struct dxWorld;
 struct dxSpace;
@@ -602,13 +602,13 @@ void dCalcVectorCross3_441( dReal* res, const( dReal )* a, const( dReal )* b ) {
 void dCalcVectorCross3_444( dReal* res, const( dReal )* a, const( dReal )* b ) { _dCalcVectorCross3( res, a, b, 4, 4, 4 ); }
 
 void dAddVectorCross3( dReal* res, const( dReal )* a, const( dReal )* b ) {
-    dReal tmp[3];
+	dReal[3] tmp;
     dCalcVectorCross3( tmp.ptr, a, b );
     dAddVectors3( res, res, tmp.ptr );
 }
 
 void dSubtractVectorCross3( dReal* res, const( dReal )* a, const( dReal )* b ) {
-    dReal tmp[3];
+	dReal[3] tmp;
     dCalcVectorCross3( tmp.ptr, a, b );
     dSubtractVectors3( res, res, tmp.ptr );
 }
@@ -635,7 +635,7 @@ void dSetCrossMatrixMinus( dReal* res, const( dReal )* a, uint skip ) {
 
 dReal dCalcPointsDistance3( const( dReal )* a, const( dReal )* b ) {
     dReal res;
-    dReal tmp[3];
+	dReal[3] tmp;
     dSubtractVectors3( tmp.ptr, a, b );
     res = dCalcVectorLength3( tmp.ptr );
     return res;
@@ -703,25 +703,25 @@ void dMultiply2_333( dReal* res, const( dReal )* a, const( dReal )* b ) {
 }
 
 void dMultiplyAdd0_331( dReal* res, const( dReal )* a, const( dReal )* b ) {
-    dReal tmp[3];
+	dReal[3] tmp;
     dMultiplyHelper0_331( tmp.ptr, a, b );
     dAddVectors3( res, res, tmp.ptr );
 }
 
 void dMultiplyAdd1_331( dReal* res, const( dReal )* a, const( dReal )* b ) {
-    dReal tmp[3];
+	dReal[3] tmp;
     dMultiplyHelper1_331( tmp.ptr, a, b );
     dAddVectors3( res, res, tmp.ptr );
 }
 
 void dMultiplyAdd0_133( dReal* res, const( dReal )* a, const( dReal )* b ) {
-    dReal tmp[3];
+	dReal[3] tmp;
     dMultiplyHelper0_133( tmp.ptr, a, b );
     dAddVectors3( res, res, tmp.ptr );
 }
 
 void dMultiplyAdd0_333( dReal* res, const( dReal )* a, const( dReal )* b ) {
-    dReal tmp[3];
+	dReal[3] tmp;
     dMultiplyHelper0_133( tmp.ptr, a + 0, b );
     dAddVectors3( res+ 0, res + 0, tmp.ptr );
     dMultiplyHelper0_133( tmp.ptr, a + 4, b );
@@ -731,7 +731,7 @@ void dMultiplyAdd0_333( dReal* res, const( dReal )* a, const( dReal )* b ) {
 }
 
 void dMultiplyAdd1_333( dReal* res, const( dReal )* a, const( dReal )* b ) {
-    dReal tmp[3];
+	dReal[3] tmp;
     dMultiplyHelper1_133( tmp.ptr, b, a + 0 );
     dAddVectors3( res + 0, res + 0, tmp.ptr );
     dMultiplyHelper1_133( tmp.ptr, b, a + 1 );
@@ -741,7 +741,7 @@ void dMultiplyAdd1_333( dReal* res, const( dReal )* a, const( dReal )* b ) {
 }
 
 void dMultiplyAdd2_333( dReal* res, const( dReal )* a, const( dReal )* b ) {
-    dReal tmp[3];
+	dReal[3] tmp;
     dMultiplyHelper0_331( tmp.ptr, b, a + 0 );
     dAddVectors3( res + 0, res + 0, tmp.ptr );
     dMultiplyHelper0_331( tmp.ptr, b, a + 4 );
@@ -852,7 +852,7 @@ struct dThreadingFunctionsInfo {
 // timer.h
 struct dStopwatch {
     double time;
-    c_ulong cc[2];
+	c_ulong[2] cc;
 }
 
 // version.h
