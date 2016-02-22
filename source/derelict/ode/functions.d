@@ -88,8 +88,8 @@ extern(C) @nogc nothrow {
     alias da_dGeomSphereSetRadius = void function(dGeomID,dReal);
     alias da_dGeomSphereGetRadius = dReal function(dGeomID);
     alias da_dGeomSpherePointDepth = dReal function(dGeomID,dReal,dReal,dReal);
-    alias da_dCreateConvex = dGeomID function(dSpaceID,dReal*,uint,dReal*,uint,uint*);
-    alias da_dGeomSetConvex = void function(dGeomID,dReal*,uint,dReal*,uint,uint*);
+    alias da_dCreateConvex = dGeomID function(dSpaceID,const(dReal)*,uint,const(dReal)*,uint,uint*);
+    alias da_dGeomSetConvex = void function(dGeomID,const(dReal)*,uint,const(dReal)*,uint,uint*);
     alias da_dCreateBox = dGeomID function(dSpaceID,dReal,dReal,dReal);
     alias da_dGeomBoxSetLengths = void function(dGeomID,dReal,dReal,dReal);
     alias da_dGeomBoxGetLengths = void function(dGeomID,ref dVector3);
