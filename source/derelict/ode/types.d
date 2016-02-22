@@ -854,6 +854,3 @@ struct dStopwatch {
     double time;
 	c_ulong[2] cc;
 }
-
-// version.h
-enum dODE_VERSION = "0.13.1";
