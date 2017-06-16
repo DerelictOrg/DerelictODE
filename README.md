@@ -1,7 +1,7 @@
 DerelictODE
 ===========
 
-A dynamic binding to version 0.13.1 of the [Open Dynamics Engine][1] physics library for the D Programming Language.
+A dynamic binding to version 0.14.0 of the [Open Dynamics Engine][1] physics library for the D Programming Language.
 
 Please see the pages [Building and Linking Derelict][2] and [Using Derelict][3], in the Derelict documentation, for information on how to build DerelictODE and load the ODE libraries at run time. In the meantime, here's some sample code.
 
