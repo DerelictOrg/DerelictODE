@@ -7,4 +7,4 @@ targetType "library"
 targetPath "lib"
 targetName "DerelictODE"
 
-dependency "derelict-util" version="~>2.0.6-beta.1"
+dependency "derelict-util" version="~>2.0.6"
