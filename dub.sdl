@@ -7,4 +7,12 @@ targetType "library"
 targetPath "lib"
 targetName "DerelictODE"
 
-dependency "derelict-util" version="~>2.0.6-beta.1"
+dependency "derelict-util" version="~>3.0.0-beta.1"
+
+configuration "ode-single" {
+    versions "DerelictODE_Single"
+}
+
+configuration "ode-double" {
+    versions "DerelictODE_Double"
+}

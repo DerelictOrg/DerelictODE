@@ -27,43 +27,21 @@ DEALINGS IN THE SOFTWARE.
 */
 module derelict.ode.ode;
 
+import derelict.util.loader,
+       derelict.util.system;
 public {
-    import derelict.ode.types;
-    import derelict.ode.functions;
-}
-
-private {
-    import derelict.util.loader;
-    import derelict.util.system;
-
-    static if(Derelict_OS_Windows) {
-        static if(dDOUBLE)
-            enum libNames = "ode_double.dll,ode_doubled.dll,ode.dll";
-        else
-            enum libNames = "ode_single.dll,ode_singled.dll,ode.dll";
-    }
-    else static if(Derelict_OS_Mac) {
-        static if(dDOUBLE)
-            enum libNames = "libode_double.dylib,libode_doubled.dylib,libode.dylib";
-        else
-            enum libNames = "libode_single.dylib,libode_singled.dylib,libode.dylib";
-    }
-    else static if(Derelict_OS_Posix) {
-        static if(dDOUBLE)
-            enum libNames = "libode-double.so,libode_double.so,libode_doubled.so,libode.so,libode.so.3";
-        else
-            enum libNames = "libode_single.so,libode_singled.so,libode.so,libode.so.3";
-    }
-    else
-        static assert(0, "Need to implement ODE libNames for this operating system.");
+    import derelict.ode.types,
+           derelict.ode.functions;
 }
 
 class DerelictODELoader : SharedLibLoader {
-    public this() {
+    this() 
+    {
         super(libNames);
     }
 
-    protected override void loadSymbols() {
+    protected override void loadSymbols() 
+    {
         bindFunc(cast(void**)&dGetConfiguration, "dGetConfiguration");
         bindFunc(cast(void**)&dCheckConfiguration, "dCheckConfiguration");
         bindFunc(cast(void**)&dGeomDestroy, "dGeomDestroy");
@@ -189,6 +167,7 @@ class DerelictODELoader : SharedLibLoader {
         bindFunc(cast(void**)&dGeomTriMeshDataDestroy, "dGeomTriMeshDataDestroy");
         bindFunc(cast(void**)&dGeomTriMeshDataSet, "dGeomTriMeshDataSet");
         bindFunc(cast(void**)&dGeomTriMeshDataGet, "dGeomTriMeshDataGet");
+        bindFunc(cast(void**)&dGeomTriMeshDataGet2, "dGeomTriMeshDataGet2");
         bindFunc(cast(void**)&dGeomTriMeshSetLastTransform, "dGeomTriMeshSetLastTransform");
         bindFunc(cast(void**)&dGeomTriMeshGetLastTransform, "dGeomTriMeshGetLastTransform");
         bindFunc(cast(void**)&dGeomTriMeshDataBuildSingle, "dGeomTriMeshDataBuildSingle");
@@ -198,8 +177,6 @@ class DerelictODELoader : SharedLibLoader {
         bindFunc(cast(void**)&dGeomTriMeshDataBuildSimple, "dGeomTriMeshDataBuildSimple");
         bindFunc(cast(void**)&dGeomTriMeshDataBuildSimple1, "dGeomTriMeshDataBuildSimple1");
         bindFunc(cast(void**)&dGeomTriMeshDataPreprocess, "dGeomTriMeshDataPreprocess");
-        bindFunc(cast(void**)&dGeomTriMeshDataGetBuffer, "dGeomTriMeshDataGetBuffer");
-        bindFunc(cast(void**)&dGeomTriMeshDataSetBuffer, "dGeomTriMeshDataSetBuffer");
         bindFunc(cast(void**)&dGeomTriMeshSetCallback, "dGeomTriMeshSetCallback");
         bindFunc(cast(void**)&dGeomTriMeshGetCallback, "dGeomTriMeshGetCallback");
         bindFunc(cast(void**)&dGeomTriMeshSetArrayCallback, "dGeomTriMeshSetArrayCallback");
@@ -478,8 +455,7 @@ class DerelictODELoader : SharedLibLoader {
         bindFunc(cast(void**)&dJointSetSliderParam, "dJointSetSliderParam");
         bindFunc(cast(void**)&dJointAddSliderForce, "dJointAddSliderForce");
         bindFunc(cast(void**)&dJointSetHinge2Anchor, "dJointSetHinge2Anchor");
-        bindFunc(cast(void**)&dJointSetHinge2Axis1, "dJointSetHinge2Axis1");
-        bindFunc(cast(void**)&dJointSetHinge2Axis2, "dJointSetHinge2Axis2");
+        bindFunc(cast(void**)&dJointSetHinge2Axes, "dJointSetHinge2Axes");
         bindFunc(cast(void**)&dJointSetHinge2Param, "dJointSetHinge2Param");
         bindFunc(cast(void**)&dJointAddHinge2Torques, "dJointAddHinge2Torques");
         bindFunc(cast(void**)&dJointSetUniversalAnchor, "dJointSetUniversalAnchor");
@@ -686,6 +662,29 @@ class DerelictODELoader : SharedLibLoader {
 
 __gshared DerelictODELoader DerelictODE;
 
-shared static this() {
+shared static this() 
+{
     DerelictODE = new DerelictODELoader();
 }
+
+private:
+    static if(Derelict_OS_Windows) {
+        static if(dDOUBLE)
+            enum libNames = "ode_double.dll,ode_doubled.dll,ode.dll";
+        else
+            enum libNames = "ode_single.dll,ode_singled.dll,ode.dll";
+    }
+    else static if(Derelict_OS_Mac) {
+        static if(dDOUBLE)
+            enum libNames = "libode_double.dylib,libode_doubled.dylib,libode.dylib";
+        else
+            enum libNames = "libode_single.dylib,libode_singled.dylib,libode.dylib";
+    }
+    else static if(Derelict_OS_Posix) {
+        static if(dDOUBLE)
+            enum libNames = "libode-double.so,libode_double.so,libode_doubled.so,libode.so,libode.so.3";
+        else
+            enum libNames = "libode_single.so,libode_singled.so,libode.so,libode.so.3";
+    }
+    else
+        static assert(0, "Need to implement ODE libNames for this operating system.");

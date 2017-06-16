@@ -35,6 +35,9 @@ private {
     import derelict.util.system;
 }
 
+// version.h
+enum dODE_VERSION = "0.15.2";
+
 // odeconfig.h
 alias dint64 = long;
 alias duint64 = ulong;
@@ -44,6 +47,11 @@ alias dint16 = short;
 alias duint16 = ushort;
 alias dint8 = byte;
 alias duint8 = ubyte;
+
+alias dintptr = ptrdiff_t;
+alias duintptr = size_t;
+alias ddiffint = ptrdiff_t;
+alias dsizeint = size_t;
 
 version(DerelictODE_Single) {
     enum dDOUBLE = false;
@@ -81,24 +89,157 @@ int dPAD(int a) {
     return (a > 1) ? (((a - 1)|3)+1) : a;
 }
 
-alias dVector3 = dReal[4];
-alias dVector4 = dReal[4];
-alias dMatrix3 = dReal[4*3];
-alias dMatrix4 = dReal[4*4];
-alias dMatrix6 = dReal[8*6];
-alias dQuaternion = dReal[4];
-
-dReal dRecip(dReal x) {
-    return 1.0/x;
+alias dSpaceAxis = int;
+enum {
+    dSA__MIN,
+    dSA_X = dSA__MIN,
+    dSA_Y,
+    dSA_Z,
+    dSA__MAX,
 }
 
-dReal dRecipSqrt(dReal x) {
-    return 1.0/sqrt(x);
+alias dMotionDynamics = int;
+enum {
+    dMD__MIN,
+    dMD_LINEAR = dMD__MIN,
+    dMD_ANGULAR,
+    dMD__MAX,
 }
 
-dReal dFMod(dReal a, dReal b) {
-    real c;
-    return modf(a, c);
+alias dDynamicsAxis = int;
+enum {
+    dDA__MIN,
+    dDA__L_MIN = dDA__MIN + dMD_LINEAR * dSA__MAX,
+    dDA_LX = dDA__L_MIN + dSA_X,
+    dDA_LY = dDA__L_MIN + dSA_Y,
+    dDA_LZ = dDA__L_MIN + dSA_Z,
+    dDA__L_MAX = dDA__L_MIN + dSA__MAX,
+    dDA__A_MIN = dDA__MIN + dMD_ANGULAR * dSA__MAX,
+    dDA_AX = dDA__A_MIN + dSA_X,
+    dDA_AY = dDA__A_MIN + dSA_Y,
+    dDA_AZ = dDA__A_MIN + dSA_Z,
+    dDA__A_MAX = dDA__A_MIN + dSA__MAX,
+    dDA__MAX = dDA__MIN + dMD__MAX * dSA__MAX,
+}
+
+alias dVec3Element = int;
+enum {
+    dV3E__MIN,
+    dV3E__AXES_MIN = dV3E__MIN,
+    dV3E_X = dV3E__AXES_MIN + dSA_X,
+    dV3E_Y = dV3E__AXES_MIN + dSA_Y,
+    dV3E_Z = dV3E__AXES_MIN + dSA_Z,
+    dV3E__AXES_MAX = dV3E__AXES_MIN + dSA__MAX,
+    dV3E_PAD = dV3E__AXES_MAX,
+    dV3E__MAX,
+    dV3E__AXES_COUNT = dV3E__AXES_MAX - dV3E__AXES_MIN,
+}
+
+alias dVec4Element = int;
+enum {
+    dV4E__MIN,
+    dV4E_X = dV4E__MIN + dSA_X,
+    dV4E_Y = dV4E__MIN + dSA_Y,
+    dV4E_Z = dV4E__MIN + dSA_Z,
+    dV4E_O = dV4E__MIN + dSA__MAX,
+    dV4E__MAX,
+}
+
+alias dMat3Element = int;
+enum {
+    dM3E__MIN,
+    dM3E__X_MIN = dM3E__MIN + dSA_X * dV3E__MAX,    
+    dM3E__X_AXES_MIN = dM3E__X_MIN + dV3E__AXES_MIN,
+    dM3E_XX = dM3E__X_MIN + dV3E_X,
+    dM3E_XY = dM3E__X_MIN + dV3E_Y,
+    dM3E_XZ = dM3E__X_MIN + dV3E_Z,
+    dM3E__X_AXES_MAX = dM3E__X_MIN + dV3E__AXES_MAX,
+    dM3E_XPAD = dM3E__X_MIN + dV3E_PAD,
+    dM3E__X_MAX = dM3E__X_MIN + dV3E__MAX,
+    dM3E__Y_MIN = dM3E__MIN + dSA_Y * dV3E__MAX,
+    dM3E__Y_AXES_MIN = dM3E__Y_MIN + dV3E__AXES_MIN,
+    dM3E_YX = dM3E__Y_MIN + dV3E_X,
+    dM3E_YY = dM3E__Y_MIN + dV3E_Y,
+    dM3E_YZ = dM3E__Y_MIN + dV3E_Z,
+    dM3E__Y_AXES_MAX = dM3E__Y_MIN + dV3E__AXES_MAX,
+    dM3E_YPAD = dM3E__Y_MIN + dV3E_PAD,
+    dM3E__Y_MAX = dM3E__Y_MIN + dV3E__MAX,
+    dM3E__Z_MIN = dM3E__MIN + dSA_Z * dV3E__MAX,
+    dM3E__Z_AXES_MIN = dM3E__Z_MIN + dV3E__AXES_MIN,
+    dM3E_ZX = dM3E__Z_MIN + dV3E_X,
+    dM3E_ZY = dM3E__Z_MIN + dV3E_Y,
+    dM3E_ZZ = dM3E__Z_MIN + dV3E_Z,
+    dM3E__Z_AXES_MAX = dM3E__Z_MIN + dV3E__AXES_MAX,
+    dM3E_ZPAD = dM3E__Z_MIN + dV3E_PAD,
+    dM3E__Z_MAX = dM3E__Z_MIN + dV3E__MAX,
+    dM3E__MAX = dM3E__MIN + dSA__MAX * dV3E__MAX,
+}
+
+alias dMat4Element = int;
+enum {
+    dM4E__MIN,
+    dM4E__X_MIN = dM4E__MIN + dV4E_X * dV4E__MAX,
+    dM4E_XX = dM4E__X_MIN + dV4E_X,
+    dM4E_XY = dM4E__X_MIN + dV4E_Y,
+    dM4E_XZ = dM4E__X_MIN + dV4E_Z,
+    dM4E_XO = dM4E__X_MIN + dV4E_O,
+    dM4E__X_MAX = dM4E__X_MIN + dV4E__MAX,
+    dM4E__Y_MIN = dM4E__MIN + dV4E_Y * dV4E__MAX,
+    dM4E_YX = dM4E__Y_MIN + dV4E_X,
+    dM4E_YY = dM4E__Y_MIN + dV4E_Y,
+    dM4E_YZ = dM4E__Y_MIN + dV4E_Z,
+    dM4E_YO = dM4E__Y_MIN + dV4E_O,
+    dM4E__Y_MAX = dM4E__Y_MIN + dV4E__MAX,
+    dM4E__Z_MIN = dM4E__MIN + dV4E_Z * dV4E__MAX,
+    dM4E_ZX = dM4E__Z_MIN + dV4E_X,
+    dM4E_ZY = dM4E__Z_MIN + dV4E_Y,
+    dM4E_ZZ = dM4E__Z_MIN + dV4E_Z,
+    dM4E_ZO = dM4E__Z_MIN + dV4E_O,
+    dM4E__Z_MAX = dM4E__Z_MIN + dV4E__MAX,
+    dM4E__O_MIN = dM4E__MIN + dV4E_O * dV4E__MAX,
+    dM4E_OX = dM4E__O_MIN + dV4E_X,
+    dM4E_OY = dM4E__O_MIN + dV4E_Y,
+    dM4E_OZ = dM4E__O_MIN + dV4E_Z,
+    dM4E_OO = dM4E__O_MIN + dV4E_O,
+    dM4E__O_MAX = dM4E__O_MIN + dV4E__MAX,
+    dM4E__MAX = dM4E__MIN + dV4E__MAX * dV4E__MAX,
+}
+
+alias dQuatElement = int;
+enum {
+    dQUE__MIN,
+    dQUE_R = dQUE__MIN,
+    dQUE__AXIS_MIN,
+    dQUE_I = dQUE__AXIS_MIN + dSA_X,
+    dQUE_J = dQUE__AXIS_MIN + dSA_Y,
+    dQUE_K = dQUE__AXIS_MIN + dSA_Z,
+    dQUE__AXIS_MAX = dQUE__AXIS_MIN + dSA__MAX,
+    dQUE__MAX = dQUE__AXIS_MAX,
+}
+
+alias dVector3 = dReal[dV3E__MAX];
+alias dVector4 = dReal[dV4E__MAX];
+alias dMatrix3 = dReal[dM3E__MAX];
+alias dMatrix4 = dReal[dM4E__MAX];
+alias dMatrix6 = dReal[(dMD__MAX * dV3E__MAX) * (dMD__MAX * dSA__MAX)];
+alias dQuaternion = dReal[dQUE__MAX];
+
+@nogc nothrow {
+    dReal dRecip(dReal x) {
+        return 1.0/x;
+    }
+
+    dReal dRecipSqrt(dReal x) {
+        return 1.0/sqrt(x);
+    }
+
+    dReal dFMod(dReal a, dReal b) {
+        real c;
+        return modf(a, c);
+    }
+
+    dReal dMin(dReal x, dReal y) { return x <= y ? x : y; }
+    dReal dMax(dReal x, dReal y) { return x <= y ? y : x; }
 }
 
 alias dSqrt = sqrt;
@@ -106,6 +247,7 @@ alias dSin = sin;
 alias dCos = cos;
 alias dFabs = fabs;
 alias dAtan2 = atan2;
+alias dAsin = asin;
 alias dAcos = acos;
 alias dFMod = fmod;
 alias dFloor = floor;
@@ -113,6 +255,8 @@ alias dCeil = ceil;
 alias dCopySign = copysign;
 alias dNextAfter = nextafter;
 alias dIsNan = isNaN;
+
+
 
 struct dxWorld;
 struct dxSpace;
@@ -305,7 +449,7 @@ struct dGeomClass {
 }
 
 // collision_space.h
-extern(C) @nogc nothrow alias dNearCallback = void function(void*, dGeomID, dGeomID);
+extern(C) nothrow alias dNearCallback = void function(void*, dGeomID, dGeomID);
 
 enum {
     dSAP_AXES_XYZ = ((0)|(1<<2)|(2<<4)),
@@ -320,9 +464,34 @@ enum {
 struct dxTriMeshData;
 alias dxTriMeshData* dTriMeshDataID;
 
-enum { TRIMESH_FACE_NORMALS }
+alias dMeshTriangleVertex = int;
+enum {
+    dMTV_MIN,
+    dMTV_FIRST = dMTV_MIN,
+    dMTV_SECOND,
+    dMTV_THIRD,
+    dMTV_MAX
+}
 
-extern(C) @nogc nothrow {
+enum {
+    dTRIMESHDATA_MIN,
+    dTRIMESHDATA_FACE_NORMALS = dTRIMESHDATA_MIN,
+    dTRIMESHDATA_USE_FLAGS,
+    dTRIMESHDATA_MAX
+}
+alias TRIMESH_FACE_NORMALS = dTRIMESHDATA_FACE_NORMALS;
+
+enum 
+{
+    dMESHDATAUSE_EDGE1      = 0x01,
+    dMESHDATAUSE_EDGE2      = 0x02,
+    dMESHDATAUSE_EDGE3      = 0x04,
+    dMESHDATAUSE_VERTEX1    = 0x08,
+    dMESHDATAUSE_VERTEX2    = 0x10,
+    dMESHDATAUSE_VERTEX3    = 0x20,
+}
+
+extern(C) nothrow {
     alias dTriCallback = int function(dGeomID, dGeomID, int);
     alias dTriArrayCallback = void function(dGeomID, dGeomID, const(int)*, int);
     alias dTriRayCallback = int function(dGeomID, dGeomID, int, dReal, dReal);
@@ -430,361 +599,392 @@ enum : uint {
 }
 
 // odemath.h
-auto dACCESS33(T)(T a, size_t i, size_t j) {
-    return a[i * 4 + j];
-}
-
-bool dVALIDVEC3(T)(T v) {
-    return !(dIsNan(v[0]) || dIsNan(v[1]) || dIsNan(v[2]));
-}
-
-bool dVALIDVEC4(T)(T v) {
-    return !(dIsNan(v[0]) || dIsNan(v[1]) || dIsNan(v[2]) || dIsNan(v[3]));
-}
-
-bool dVALIDMAT3(T)(T m) {
-    return !(
-        dIsNan(m[0]) || dIsNan(m[1]) || dIsNan(m[2])  || dIsNan(m[3]) ||
-        dIsNan(m[4]) || dIsNan(m[5]) || dIsNan(m[6])  || dIsNan(m[7]) ||
-        dIsNan(m[8]) || dIsNan(m[9]) || dIsNan(m[10]) || dIsNan(m[11])
-    );
-}
-
-bool dVALIDMAT4(T)(T m) {
-    return !(
-        dIsNan(m[0])  || dIsNan(m[1])  || dIsNan(m[2])  || dIsNan(m[3])  ||
-        dIsNan(m[4])  || dIsNan(m[5])  || dIsNan(m[6])  || dIsNan(m[7])  ||
-        dIsNan(m[8])  || dIsNan(m[9])  || dIsNan(m[10]) || dIsNan(m[11]) ||
-        dIsNan(m[12]) || dIsNan(m[13]) || dIsNan(m[14]) || dIsNan(m[15])
-    );
-}
-
-void dAddVectors3(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dReal res_0, res_1, res_2;
-    res_0 = a[0] + b[0];
-    res_1 = a[1] + b[1];
-    res_2 = a[2] + b[2];
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-
-void dSubtractVectors3(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dReal res_0, res_1, res_2;
-    res_0 = a[0] - b[0];
-    res_1 = a[1] - b[1];
-    res_2 = a[2] - b[2];
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-void dAddScaledVectors3(dReal* res, const(dReal)* a, const(dReal)* b, dReal a_scale, dReal b_scale) {
-    dReal res_0, res_1, res_2;
-    res_0 = a_scale * a[0] + b_scale * b[0];
-    res_1 = a_scale * a[1] + b_scale * b[1];
-    res_2 = a_scale * a[2] + b_scale * b[2];
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-void dScaleVector3(dReal* res, dReal nScale) {
-    res[0] *= nScale;
-    res[1] *= nScale;
-    res[2] *= nScale;
-}
-
-void dNegateVector3(dReal* res) {
-    res[0] = -res[0];
-    res[1] = -res[1];
-    res[2] = -res[2];
-}
-
-void dCopyVector3(dReal* res, const(dReal)* a) {
-    dReal res_0, res_1, res_2;
-    res_0 = a[0];
-    res_1 = a[1];
-    res_2 = a[2];
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-void dCopyScaledVector3(dReal* res, const(dReal)* a, dReal nScale) {
-    dReal res_0, res_1, res_2;
-    res_0 = a[0] * nScale;
-    res_1 = a[1] * nScale;
-    res_2 = a[2] * nScale;
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-void dCopyNegatedVector3(dReal* res, const(dReal)* a) {
-    dReal res_0, res_1, res_2;
-    res_0 = -a[0];
-    res_1 = -a[1];
-    res_2 = -a[2];
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-void dCopyVector4(dReal* res, const(dReal)* a) {
-    dReal res_0, res_1, res_2, res_3;
-    res_0 = a[0];
-    res_1 = a[1];
-    res_2 = a[2];
-    res_3 = a[3];
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2; res[3] = res_3;
-}
-
-void dCopyMatrix4x4(dReal* res, const(dReal)* a) {
-    dCopyVector4(res + 0, a + 0);
-    dCopyVector4(res + 4, a + 4);
-    dCopyVector4(res + 8, a + 8);
-}
-
-void dCopyMatrix4x3(dReal* res, const(dReal)* a) {
-    dCopyVector3(res + 0, a + 0);
-    dCopyVector3(res + 4, a + 4);
-    dCopyVector3(res + 8, a + 8);
-}
-
-void dGetMatrixColumn3(dReal* res, const(dReal)* a, uint n) {
-    dReal res_0, res_1, res_2;
-    res_0 = a[n + 0];
-    res_1 = a[n + 4];
-    res_2 = a[n + 8];
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-dReal dCalcVectorLength3(const(dReal)* a) {
-    return dSqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
-}
-
-dReal dCalcVectorLengthSquare3(const(dReal)* a) {
-    return (a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
-}
-
-dReal dCalcPointDepth3(const(dReal)* test_p, const(dReal)* plane_p, const(dReal)* plane_n) {
-    return (plane_p[0] - test_p[0]) * plane_n[0] + (plane_p[1] - test_p[1]) * plane_n[1] + (plane_p[2] - test_p[2]) * plane_n[2];
-}
-
-dReal _dCalcVectorDot3(const(dReal)* a, const(dReal)* b, uint step_a, uint step_b) {
-    return a[0] * b[0] + a[step_a] * b[step_b] + a[2 * step_a] * b[2 * step_b];
-}
-
-dReal dCalcVectorDot3    (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,1,1); }
-dReal dCalcVectorDot3_13 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,1,3); }
-dReal dCalcVectorDot3_31 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,3,1); }
-dReal dCalcVectorDot3_33 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,3,3); }
-dReal dCalcVectorDot3_14 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,1,4); }
-dReal dCalcVectorDot3_41 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,4,1); }
-dReal dCalcVectorDot3_44 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,4,4); }
-
-void _dCalcVectorCross3(dReal* res, const(dReal)* a, const(dReal)* b, uint step_res, uint step_a, uint step_b) {
-    dReal res_0, res_1, res_2;
-    res_0 = a[  step_a]*b[2*step_b] - a[2*step_a]*b[  step_b];
-    res_1 = a[2*step_a]*b[       0] - a[       0]*b[2*step_b];
-    res_2 = a[       0]*b[  step_b] - a[  step_a]*b[       0];
-
-    res[         0] = res_0;
-    res[  step_res] = res_1;
-    res[2*step_res] = res_2;
-}
-
-void dCalcVectorCross3    (dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 1, 1, 1); }
-void dCalcVectorCross3_114(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 1, 1, 4); }
-void dCalcVectorCross3_141(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 1, 4, 1); }
-void dCalcVectorCross3_144(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 1, 4, 4); }
-void dCalcVectorCross3_411(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 4, 1, 1); }
-void dCalcVectorCross3_414(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 4, 1, 4); }
-void dCalcVectorCross3_441(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 4, 4, 1); }
-void dCalcVectorCross3_444(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 4, 4, 4); }
-
-void dAddVectorCross3(dReal* res, const(dReal)* a, const(dReal)* b) {
-	dReal[3] tmp;
-    dCalcVectorCross3(tmp.ptr, a, b);
-    dAddVectors3(res, res, tmp.ptr);
-}
-
-void dSubtractVectorCross3(dReal* res, const(dReal)* a, const(dReal)* b) {
-	dReal[3] tmp;
-    dCalcVectorCross3(tmp.ptr, a, b);
-    dSubtractVectors3(res, res, tmp.ptr);
-}
-
-void dSetCrossMatrixPlus(dReal* res, const(dReal)* a, uint skip) {
-    const dReal a_0 = a[0], a_1 = a[1], a_2 = a[2];
-    res[1] = -a_2;
-    res[2] = +a_1;
-    res[skip+0] = +a_2;
-    res[skip+2] = -a_0;
-    res[2*skip+0] = -a_1;
-    res[2*skip+1] = +a_0;
-}
-
-void dSetCrossMatrixMinus(dReal* res, const(dReal)* a, uint skip) {
-    const dReal a_0 = a[0], a_1 = a[1], a_2 = a[2];
-    res[1] = +a_2;
-    res[2] = -a_1;
-    res[skip+0] = -a_2;
-    res[skip+2] = +a_0;
-    res[2*skip+0] = +a_1;
-    res[2*skip+1] = -a_0;
-}
-
-dReal dCalcPointsDistance3(const(dReal)* a, const(dReal)* b) {
-    dReal res;
-	dReal[3] tmp;
-    dSubtractVectors3(tmp.ptr, a, b);
-    res = dCalcVectorLength3(tmp.ptr);
-    return res;
-}
-
-void dMultiplyHelper0_331(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dReal res_0, res_1, res_2;
-    res_0 = dCalcVectorDot3(a, b);
-    res_1 = dCalcVectorDot3(a + 4, b);
-    res_2 = dCalcVectorDot3(a + 8, b);
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-void dMultiplyHelper1_331(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dReal res_0, res_1, res_2;
-    res_0 = dCalcVectorDot3_41(a, b);
-    res_1 = dCalcVectorDot3_41(a + 1, b);
-    res_2 = dCalcVectorDot3_41(a + 2, b);
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-void dMultiplyHelper0_133(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dMultiplyHelper1_331(res, b, a);
-}
-
-void dMultiplyHelper1_133(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dReal res_0, res_1, res_2;
-    res_0 = dCalcVectorDot3_44(a, b);
-    res_1 = dCalcVectorDot3_44(a + 1, b);
-    res_2 = dCalcVectorDot3_44(a + 2, b);
-
-    res[0] = res_0; res[1] = res_1; res[2] = res_2;
-}
-
-void dMultiply0_331(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dMultiplyHelper0_331(res, a, b);
-}
-
-void dMultiply1_331(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dMultiplyHelper1_331(res, a, b);
-}
-
-void dMultiply0_133(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dMultiplyHelper0_133(res, a, b);
-}
-
-void dMultiply0_333(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dMultiplyHelper0_133(res + 0, a + 0, b);
-    dMultiplyHelper0_133(res + 4, a + 4, b);
-    dMultiplyHelper0_133(res + 8, a + 8, b);
-}
-
-void dMultiply1_333(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dMultiplyHelper1_133(res + 0, b, a + 0);
-    dMultiplyHelper1_133(res + 4, b, a + 1);
-    dMultiplyHelper1_133(res + 8, b, a + 2);
-}
-
-void dMultiply2_333(dReal* res, const(dReal)* a, const(dReal)* b) {
-    dMultiplyHelper0_331(res + 0, b, a + 0);
-    dMultiplyHelper0_331(res + 4, b, a + 4);
-    dMultiplyHelper0_331(res + 8, b, a + 8);
-}
-
-void dMultiplyAdd0_331(dReal* res, const(dReal)* a, const(dReal)* b) {
-	dReal[3] tmp;
-    dMultiplyHelper0_331(tmp.ptr, a, b);
-    dAddVectors3(res, res, tmp.ptr);
-}
-
-void dMultiplyAdd1_331(dReal* res, const(dReal)* a, const(dReal)* b) {
-	dReal[3] tmp;
-    dMultiplyHelper1_331(tmp.ptr, a, b);
-    dAddVectors3(res, res, tmp.ptr);
-}
-
-void dMultiplyAdd0_133(dReal* res, const(dReal)* a, const(dReal)* b) {
-	dReal[3] tmp;
-    dMultiplyHelper0_133(tmp.ptr, a, b);
-    dAddVectors3(res, res, tmp.ptr);
-}
-
-void dMultiplyAdd0_333(dReal* res, const(dReal)* a, const(dReal)* b) {
-	dReal[3] tmp;
-    dMultiplyHelper0_133(tmp.ptr, a + 0, b);
-    dAddVectors3(res+ 0, res + 0, tmp.ptr);
-    dMultiplyHelper0_133(tmp.ptr, a + 4, b);
-    dAddVectors3(res + 4, res + 4, tmp.ptr);
-    dMultiplyHelper0_133(tmp.ptr, a + 8, b);
-    dAddVectors3(res + 8, res + 8, tmp.ptr);
-}
-
-void dMultiplyAdd1_333(dReal* res, const(dReal)* a, const(dReal)* b) {
-	dReal[3] tmp;
-    dMultiplyHelper1_133(tmp.ptr, b, a + 0);
-    dAddVectors3(res + 0, res + 0, tmp.ptr);
-    dMultiplyHelper1_133(tmp.ptr, b, a + 1);
-    dAddVectors3(res + 4, res + 4, tmp.ptr);
-    dMultiplyHelper1_133(tmp.ptr, b, a + 2);
-    dAddVectors3(res + 8, res + 8, tmp.ptr);
-}
-
-void dMultiplyAdd2_333(dReal* res, const(dReal)* a, const(dReal)* b) {
-	dReal[3] tmp;
-    dMultiplyHelper0_331(tmp.ptr, b, a + 0);
-    dAddVectors3(res + 0, res + 0, tmp.ptr);
-    dMultiplyHelper0_331(tmp.ptr, b, a + 4);
-    dAddVectors3(res + 4, res + 4, tmp.ptr);
-    dMultiplyHelper0_331(tmp.ptr, b, a + 8);
-    dAddVectors3(res + 8, res + 8, tmp.ptr);
-}
-
-dReal dCalcMatrix3Det(const(dReal)* mat) {
-    dReal det;
-
-    det = mat[0] * (mat[5]*mat[10] - mat[9]*mat[6])
-        - mat[1] * (mat[4]*mat[10] - mat[8]*mat[6])
-        + mat[2] * (mat[4]*mat[9]  - mat[8]*mat[5]);
-
-    return det;
-}
-
-dReal dInvertMatrix3(dReal* dst, const(dReal)* ma) {
-    dReal det;
-    dReal detRecip;
-
-    det = dCalcMatrix3Det(ma);
-
-    if(det == 0) {
-        return 0;
+@nogc nothrow {
+    auto dACCESS33(T)(T a, size_t i, size_t j) {
+        return a[i * 4 + j];
     }
 
-    detRecip = dRecip(det);
+    bool dVALIDVEC3(T)(T v) {
+        return !(dIsNan(v[0]) || dIsNan(v[1]) || dIsNan(v[2]));
+    }
 
-    dst[0] =  (ma[5]*ma[10] - ma[6]*ma[9] ) * detRecip;
-    dst[1] =  (ma[9]*ma[2]  - ma[1]*ma[10]) * detRecip;
-    dst[2] =  (ma[1]*ma[6]  - ma[5]*ma[2] ) * detRecip;
+    bool dVALIDVEC4(T)(T v) {
+        return !(dIsNan(v[0]) || dIsNan(v[1]) || dIsNan(v[2]) || dIsNan(v[3]));
+    }
 
-    dst[4] =  (ma[6]*ma[8]  - ma[4]*ma[10]) * detRecip;
-    dst[5] =  (ma[0]*ma[10] - ma[8]*ma[2] ) * detRecip;
-    dst[6] =  (ma[4]*ma[2]  - ma[0]*ma[6] ) * detRecip;
+    bool dVALIDMAT3(T)(T m) {
+        return !(
+            dIsNan(m[0]) || dIsNan(m[1]) || dIsNan(m[2])  || dIsNan(m[3]) ||
+            dIsNan(m[4]) || dIsNan(m[5]) || dIsNan(m[6])  || dIsNan(m[7]) ||
+            dIsNan(m[8]) || dIsNan(m[9]) || dIsNan(m[10]) || dIsNan(m[11])
+        );
+    }
 
-    dst[8] =  (ma[4]*ma[9]  - ma[8]*ma[5] ) * detRecip;
-    dst[9] =  (ma[8]*ma[1]  - ma[0]*ma[9] ) * detRecip;
-    dst[10] = (ma[0]*ma[5]  - ma[1]*ma[4] ) * detRecip;
+    bool dVALIDMAT4(T)(T m) {
+        return !(
+            dIsNan(m[0])  || dIsNan(m[1])  || dIsNan(m[2])  || dIsNan(m[3])  ||
+            dIsNan(m[4])  || dIsNan(m[5])  || dIsNan(m[6])  || dIsNan(m[7])  ||
+            dIsNan(m[8])  || dIsNan(m[9])  || dIsNan(m[10]) || dIsNan(m[11]) ||
+            dIsNan(m[12]) || dIsNan(m[13]) || dIsNan(m[14]) || dIsNan(m[15])
+        );
+    }
 
-    return det;
+    void dZeroVector3(ref dVector3 res) {
+        res[dV3E_X] = 0.0;
+        res[dV3E_Y] = 0.0;
+        res[dV3E_Z] = 0.0;
+    }
+
+    void dZeroMatrix4(dMatrix4 res) {
+        res[dM4E_XX] = 0.0; res[dM4E_XY] = 0.0; res[dM4E_XZ] = 0.0; res[dM4E_XO] = 0.0;
+        res[dM4E_YX] = 0.0; res[dM4E_YY] = 0.0; res[dM4E_YZ] = 0.0; res[dM4E_YO] = 0.0;
+        res[dM4E_ZX] = 0.0; res[dM4E_ZY] = 0.0; res[dM4E_ZZ] = 0.0; res[dM4E_ZO] = 0.0;
+        res[dM4E_OX] = 0.0; res[dM4E_OY] = 0.0; res[dM4E_OZ] = 0.0; res[dM4E_OO] = 0.0;
+}
+
+    void dZeroMatrix3(ref dMatrix3 res) {
+        res[dM3E_XX] = 0.0; res[dM3E_XY] = 0.0; res[dM3E_XZ] = 0.0;
+        res[dM3E_YX] = 0.0; res[dM3E_YY] = 0.0; res[dM3E_YZ] = 0.0;
+        res[dM3E_ZX] = 0.0; res[dM3E_ZY] = 0.0; res[dM3E_ZZ] = 0.0;
+    }
+
+    void dAssignVector3(ref dVector3 res, dReal x, dReal y, dReal z) {
+        res[dV3E_X] = x;
+        res[dV3E_Y] = y;
+        res[dV3E_Z] = z;
+    }
+
+    void dAddVectors3(dReal* res, const(dReal)* a, const(dReal)* b) {
+        immutable res_0 = a[0] + b[0];
+        immutable res_1 = a[1] + b[1];
+        immutable res_2 = a[2] + b[2];
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dSubtractVectors3(dReal* res, const(dReal)* a, const(dReal)* b) {
+        immutable res_0 = a[0] - b[0];
+        immutable res_1 = a[1] - b[1];
+        immutable res_2 = a[2] - b[2];
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dAddVectorScaledVector3(dReal* res, const(dReal)* a, const(dReal)* b, dReal b_scale) {
+        immutable res_0 = a[0] + b_scale * b[0];
+        immutable res_1 = a[1] + b_scale * b[1];
+        immutable res_2 = a[2] + b_scale * b[2];
+        
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dAddScaledVectors3(dReal* res, const(dReal)* a, const(dReal)* b, dReal a_scale, dReal b_scale) {
+        immutable res_0 = a_scale * a[0] + b_scale * b[0];
+        immutable res_1 = a_scale * a[1] + b_scale * b[1];
+        immutable res_2 = a_scale * a[2] + b_scale * b[2];
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dAddThreeScaledVectors3(dReal *res, const(dReal)*a, const(dReal)*b, const(dReal)*c, dReal a_scale, dReal b_scale, dReal c_scale)
+    {
+        immutable res_0 = a_scale * a[0] + b_scale * b[0] + c_scale * c[0];
+        immutable res_1 = a_scale * a[1] + b_scale * b[1] + c_scale * c[1];
+        immutable res_2 = a_scale * a[2] + b_scale * b[2] + c_scale * c[2];
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dScaleVector3(dReal* res, dReal nScale) {
+        res[0] *= nScale;
+        res[1] *= nScale;
+        res[2] *= nScale;
+    }
+
+    void dNegateVector3(dReal* res) {
+        res[0] = -res[0];
+        res[1] = -res[1];
+        res[2] = -res[2];
+    }
+
+    void dCopyVector3(dReal* res, const(dReal)* a) {
+        immutable res_0 = a[0];
+        immutable res_1 = a[1];
+        immutable res_2 = a[2];
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dCopyScaledVector3(dReal* res, const(dReal)* a, dReal nScale) {
+        immutable res_0 = a[0] * nScale;
+        immutable res_1 = a[1] * nScale;
+        immutable  res_2 = a[2] * nScale;
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dCopyNegatedVector3(dReal* res, const(dReal)* a) {
+        immutable res_0 = -a[0];
+        immutable res_1 = -a[1];
+        immutable res_2 = -a[2];
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dCopyVector4(dReal* res, const(dReal)* a) {
+        immutable res_0 = a[0];
+        immutable res_1 = a[1];
+        immutable res_2 = a[2];
+        immutable res_3 = a[3];
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2; res[3] = res_3;
+    }
+
+    void dCopyMatrix4x4(dReal* res, const(dReal)* a) {
+        dCopyVector4(res + 0, a + 0);
+        dCopyVector4(res + 4, a + 4);
+        dCopyVector4(res + 8, a + 8);
+    }
+
+    void dCopyMatrix4x3(dReal* res, const(dReal)* a) {
+        dCopyVector3(res + 0, a + 0);
+        dCopyVector3(res + 4, a + 4);
+        dCopyVector3(res + 8, a + 8);
+    }
+
+    void dGetMatrixColumn3(dReal* res, const(dReal)* a, uint n) {
+        immutable res_0 = a[n + 0];
+        immutable res_1 = a[n + 4];
+        immutable  res_2 = a[n + 8];
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    dReal dCalcVectorLength3(const(dReal)* a) {
+        return dSqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    }
+
+    dReal dCalcVectorLengthSquare3(const(dReal)* a) {
+        return (a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    }
+
+    dReal dCalcPointDepth3(const(dReal)* test_p, const(dReal)* plane_p, const(dReal)* plane_n) {
+        return (plane_p[0] - test_p[0]) * plane_n[0] + (plane_p[1] - test_p[1]) * plane_n[1] + (plane_p[2] - test_p[2]) * plane_n[2];
+    }
+
+    dReal _dCalcVectorDot3(const(dReal)* a, const(dReal)* b, uint step_a, uint step_b) {
+        return a[0] * b[0] + a[step_a] * b[step_b] + a[2 * step_a] * b[2 * step_b];
+    }
+
+    dReal dCalcVectorDot3    (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,1,1); }
+    dReal dCalcVectorDot3_13 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,1,3); }
+    dReal dCalcVectorDot3_31 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,3,1); }
+    dReal dCalcVectorDot3_33 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,3,3); }
+    dReal dCalcVectorDot3_14 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,1,4); }
+    dReal dCalcVectorDot3_41 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,4,1); }
+    dReal dCalcVectorDot3_44 (const(dReal)* a, const(dReal)* b) { return _dCalcVectorDot3(a,b,4,4); }
+
+    void _dCalcVectorCross3(dReal* res, const(dReal)* a, const(dReal)* b, uint step_res, uint step_a, uint step_b) {
+        immutable res_0 = a[  step_a]*b[2*step_b] - a[2*step_a]*b[  step_b];
+        immutable res_1 = a[2*step_a]*b[       0] - a[       0]*b[2*step_b];
+        immutable res_2 = a[       0]*b[  step_b] - a[  step_a]*b[       0];
+
+        res[         0] = res_0;
+        res[  step_res] = res_1;
+        res[2*step_res] = res_2;
+    }
+
+    void dCalcVectorCross3    (dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 1, 1, 1); }
+    void dCalcVectorCross3_114(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 1, 1, 4); }
+    void dCalcVectorCross3_141(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 1, 4, 1); }
+    void dCalcVectorCross3_144(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 1, 4, 4); }
+    void dCalcVectorCross3_411(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 4, 1, 1); }
+    void dCalcVectorCross3_414(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 4, 1, 4); }
+    void dCalcVectorCross3_441(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 4, 4, 1); }
+    void dCalcVectorCross3_444(dReal* res, const(dReal)* a, const(dReal)* b) { _dCalcVectorCross3(res, a, b, 4, 4, 4); }
+
+    void dAddVectorCross3(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dReal[3] tmp;
+        dCalcVectorCross3(tmp.ptr, a, b);
+        dAddVectors3(res, res, tmp.ptr);
+    }
+
+    void dSubtractVectorCross3(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dReal[3] tmp;
+        dCalcVectorCross3(tmp.ptr, a, b);
+        dSubtractVectors3(res, res, tmp.ptr);
+    }
+
+    void dSetCrossMatrixPlus(dReal* res, const(dReal)* a, uint skip) {
+        immutable a_0 = a[0], a_1 = a[1], a_2 = a[2];
+        res[1] = -a_2;
+        res[2] = +a_1;
+        res[skip+0] = +a_2;
+        res[skip+2] = -a_0;
+        res[2*skip+0] = -a_1;
+        res[2*skip+1] = +a_0;
+    }
+
+    void dSetCrossMatrixMinus(dReal* res, const(dReal)* a, uint skip) {
+        immutable  a_0 = a[0], a_1 = a[1], a_2 = a[2];
+        res[1] = +a_2;
+        res[2] = -a_1;
+        res[skip+0] = -a_2;
+        res[skip+2] = +a_0;
+        res[2*skip+0] = +a_1;
+        res[2*skip+1] = -a_0;
+    }
+
+    dReal dCalcPointsDistance3(const(dReal)* a, const(dReal)* b) {
+        dReal res;
+        dReal[3] tmp;
+        dSubtractVectors3(tmp.ptr, a, b);
+        res = dCalcVectorLength3(tmp.ptr);
+        return res;
+    }
+
+    void dMultiplyHelper0_331(dReal* res, const(dReal)* a, const(dReal)* b) {
+        immutable res_0 = dCalcVectorDot3(a, b);
+        immutable res_1 = dCalcVectorDot3(a + 4, b);
+        immutable res_2 = dCalcVectorDot3(a + 8, b);
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dMultiplyHelper1_331(dReal* res, const(dReal)* a, const(dReal)* b) {
+        immutable res_0 = dCalcVectorDot3_41(a, b);
+        immutable res_1 = dCalcVectorDot3_41(a + 1, b);
+        immutable res_2 = dCalcVectorDot3_41(a + 2, b);
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dMultiplyHelper0_133(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dMultiplyHelper1_331(res, b, a);
+    }
+
+    void dMultiplyHelper1_133(dReal* res, const(dReal)* a, const(dReal)* b) {
+        immutable res_0 = dCalcVectorDot3_44(a, b);
+        immutable res_1 = dCalcVectorDot3_44(a + 1, b);
+        immutable res_2 = dCalcVectorDot3_44(a + 2, b);
+
+        res[0] = res_0; res[1] = res_1; res[2] = res_2;
+    }
+
+    void dMultiply0_331(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dMultiplyHelper0_331(res, a, b);
+    }
+
+    void dMultiply1_331(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dMultiplyHelper1_331(res, a, b);
+    }
+
+    void dMultiply0_133(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dMultiplyHelper0_133(res, a, b);
+    }
+
+    void dMultiply0_333(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dMultiplyHelper0_133(res + 0, a + 0, b);
+        dMultiplyHelper0_133(res + 4, a + 4, b);
+        dMultiplyHelper0_133(res + 8, a + 8, b);
+    }
+
+    void dMultiply1_333(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dMultiplyHelper1_133(res + 0, b, a + 0);
+        dMultiplyHelper1_133(res + 4, b, a + 1);
+        dMultiplyHelper1_133(res + 8, b, a + 2);
+    }
+
+    void dMultiply2_333(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dMultiplyHelper0_331(res + 0, b, a + 0);
+        dMultiplyHelper0_331(res + 4, b, a + 4);
+        dMultiplyHelper0_331(res + 8, b, a + 8);
+    }
+
+    void dMultiplyAdd0_331(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dReal[3] tmp;
+        dMultiplyHelper0_331(tmp.ptr, a, b);
+        dAddVectors3(res, res, tmp.ptr);
+    }
+
+    void dMultiplyAdd1_331(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dReal[3] tmp;
+        dMultiplyHelper1_331(tmp.ptr, a, b);
+        dAddVectors3(res, res, tmp.ptr);
+    }
+
+    void dMultiplyAdd0_133(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dReal[3] tmp;
+        dMultiplyHelper0_133(tmp.ptr, a, b);
+        dAddVectors3(res, res, tmp.ptr);
+    }
+
+    void dMultiplyAdd0_333(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dReal[3] tmp;
+        dMultiplyHelper0_133(tmp.ptr, a + 0, b);
+        dAddVectors3(res+ 0, res + 0, tmp.ptr);
+        dMultiplyHelper0_133(tmp.ptr, a + 4, b);
+        dAddVectors3(res + 4, res + 4, tmp.ptr);
+        dMultiplyHelper0_133(tmp.ptr, a + 8, b);
+        dAddVectors3(res + 8, res + 8, tmp.ptr);
+    }
+
+    void dMultiplyAdd1_333(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dReal[3] tmp;
+        dMultiplyHelper1_133(tmp.ptr, b, a + 0);
+        dAddVectors3(res + 0, res + 0, tmp.ptr);
+        dMultiplyHelper1_133(tmp.ptr, b, a + 1);
+        dAddVectors3(res + 4, res + 4, tmp.ptr);
+        dMultiplyHelper1_133(tmp.ptr, b, a + 2);
+        dAddVectors3(res + 8, res + 8, tmp.ptr);
+    }
+
+    void dMultiplyAdd2_333(dReal* res, const(dReal)* a, const(dReal)* b) {
+        dReal[3] tmp;
+        dMultiplyHelper0_331(tmp.ptr, b, a + 0);
+        dAddVectors3(res + 0, res + 0, tmp.ptr);
+        dMultiplyHelper0_331(tmp.ptr, b, a + 4);
+        dAddVectors3(res + 4, res + 4, tmp.ptr);
+        dMultiplyHelper0_331(tmp.ptr, b, a + 8);
+        dAddVectors3(res + 8, res + 8, tmp.ptr);
+    }
+
+    dReal dCalcMatrix3Det(const(dReal)* mat) {
+        dReal det;
+
+        det = mat[0] * (mat[5]*mat[10] - mat[9]*mat[6])
+            - mat[1] * (mat[4]*mat[10] - mat[8]*mat[6])
+            + mat[2] * (mat[4]*mat[9]  - mat[8]*mat[5]);
+
+        return det;
+    }
+
+    dReal dInvertMatrix3(dReal* dst, const(dReal)* ma) {
+        dReal det;
+        dReal detRecip;
+
+        det = dCalcMatrix3Det(ma);
+
+        if(det == 0) {
+            return 0;
+        }
+
+        detRecip = dRecip(det);
+
+        dst[0] =  (ma[5]*ma[10] - ma[6]*ma[9] ) * detRecip;
+        dst[1] =  (ma[9]*ma[2]  - ma[1]*ma[10]) * detRecip;
+        dst[2] =  (ma[1]*ma[6]  - ma[5]*ma[2] ) * detRecip;
+
+        dst[4] =  (ma[6]*ma[8]  - ma[4]*ma[10]) * detRecip;
+        dst[5] =  (ma[0]*ma[10] - ma[8]*ma[2] ) * detRecip;
+        dst[6] =  (ma[4]*ma[2]  - ma[0]*ma[6] ) * detRecip;
+
+        dst[8] =  (ma[4]*ma[9]  - ma[8]*ma[5] ) * detRecip;
+        dst[9] =  (ma[8]*ma[1]  - ma[0]*ma[9] ) * detRecip;
+        dst[10] = (ma[0]*ma[5]  - ma[1]*ma[4] ) * detRecip;
+
+        return det;
+    }
 }
 
 // threading.h
@@ -795,7 +995,7 @@ alias dmutexindex_t = uint;
 struct dxMutexGroup;
 alias dMutexGroupID = dxMutexGroup*;
 
-extern(C) @nogc nothrow {
+extern(C) nothrow {
     alias dMutexGroupAllocFunction = dMutexGroupID function(dThreadingImplementationID,dmutexindex_t,const(char*)*);
     alias dMutexGroupFreeFunction = void function(dThreadingImplementationID,dMutexGroupID);
     alias dMutexGroupMutexLockFunction = void function(dThreadingImplementationID,dMutexGroupID,dmutexindex_t);
@@ -817,7 +1017,7 @@ struct dThreadedWaitTime {
     c_ulong wait_nsec;
 }
 
-extern(C) @nogc nothrow {
+extern(C) nothrow {
     alias dThreadedCallFunction = int function(void*,dcallindex_t,dCallReleaseeID);
     alias dThreadedCallWaitAllocFunction = dCallWaitID function(dThreadingImplementationID);
     alias dThreadedCallWaitResetFunction = void function(dThreadingImplementationID,dCallWaitID);

@@ -170,8 +170,9 @@ extern(C) @nogc nothrow {
     alias da_dGeomTriMeshDataDestroy = void function(dTriMeshDataID);
     alias da_dGeomTriMeshDataSet = void function(dTriMeshDataID,int,void*);
     alias da_dGeomTriMeshDataGet = void* function(dTriMeshDataID,int);
+    alias da_dGeomTriMeshDataGet2 = void* function(dTriMeshDataID,int,size_t*);
     alias da_dGeomTriMeshSetLastTransform = void function(dGeomID,ref dMatrix4);
-    alias da_dGeomTriMeshGetLastTransform = dReal* function(dGeomID);
+    alias da_dGeomTriMeshGetLastTransform = const(dReal)* function(dGeomID);
     alias da_dGeomTriMeshDataBuildSingle = void function(dTriMeshDataID,const(void)*,int,int,const(void)*,int,int);
     alias da_dGeomTriMeshDataBuildSingle1 = void function(dTriMeshDataID,const(void)*,int,int,const(void)*,int,int,const(void)*);
     alias da_dGeomTriMeshDataBuildDouble = void function(dTriMeshDataID,const(void)*,int,int,const(void)*,int,int);
@@ -179,8 +180,6 @@ extern(C) @nogc nothrow {
     alias da_dGeomTriMeshDataBuildSimple = void function(dTriMeshDataID,const(dReal)*,int,const(dTriIndex)*,int);
     alias da_dGeomTriMeshDataBuildSimple1 = void function(dTriMeshDataID,const(dReal)*,int,const(dTriIndex)*,int,const(int)*);
     alias da_dGeomTriMeshDataPreprocess = void function(dTriMeshDataID);
-    alias da_dGeomTriMeshDataGetBuffer = void function(dTriMeshDataID,ubyte**,int*);
-    alias da_dGeomTriMeshDataSetBuffer = void function(dTriMeshDataID,ubyte*);
     alias da_dGeomTriMeshSetCallback = void function(dGeomID,dTriCallback);
     alias da_dGeomTriMeshGetCallback = dTriCallback function(dGeomID);
     alias da_dGeomTriMeshSetArrayCallback = void function(dGeomID,dTriArrayCallback);
@@ -459,8 +458,7 @@ extern(C) @nogc nothrow {
     alias da_dJointSetSliderParam = void function(dJointID,int,dReal);
     alias da_dJointAddSliderForce = void function(dJointID,dReal);
     alias da_dJointSetHinge2Anchor = void function(dJointID,dReal,dReal,dReal);
-    alias da_dJointSetHinge2Axis1 = void function(dJointID,dReal,dReal,dReal);
-    alias da_dJointSetHinge2Axis2 = void function(dJointID,dReal,dReal,dReal);
+    alias da_dJointSetHinge2Axes = void function(dJointID,const(dReal)*,const(dReal)*);
     alias da_dJointSetHinge2Param = void function(dJointID,int,dReal);
     alias da_dJointAddHinge2Torques = void function(dJointID,dReal,dReal);
     alias da_dJointSetUniversalAnchor = void function(dJointID,dReal,dReal,dReal);
@@ -633,7 +631,7 @@ extern(C) @nogc nothrow {
     alias da_dNormalize3 = void function(ref dVector3);
     alias da_dNormalize4 = void function(ref dVector4);
     alias da_dPlaneSpace = void function(ref const(dVector3), ref dVector3, ref dVector3);
-    alias da_dOrthogonalizeR = void function(ref dMatrix3);
+    alias da_dOrthogonalizeR = int function(ref dMatrix3);
 
     // rotation.h
     alias da_dRSetIdentity = void function(ref dMatrix3);
@@ -789,6 +787,7 @@ __gshared {
     da_dGeomTriMeshDataDestroy dGeomTriMeshDataDestroy;
     da_dGeomTriMeshDataSet dGeomTriMeshDataSet;
     da_dGeomTriMeshDataGet dGeomTriMeshDataGet;
+    da_dGeomTriMeshDataGet2 dGeomTriMeshDataGet2;
     da_dGeomTriMeshSetLastTransform dGeomTriMeshSetLastTransform;
     da_dGeomTriMeshGetLastTransform dGeomTriMeshGetLastTransform;
     da_dGeomTriMeshDataBuildSingle dGeomTriMeshDataBuildSingle;
@@ -797,10 +796,8 @@ __gshared {
     da_dGeomTriMeshDataBuildDouble1 dGeomTriMeshDataBuildDouble1;
     da_dGeomTriMeshDataBuildSimple dGeomTriMeshDataBuildSimple;
     da_dGeomTriMeshDataBuildSimple1 dGeomTriMeshDataBuildSimple1;
-    da_dGeomTriMeshDataPreprocess dGeomTriMeshDataPreprocess;
-    da_dGeomTriMeshDataGetBuffer dGeomTriMeshDataGetBuffer;
-    da_dGeomTriMeshDataSetBuffer dGeomTriMeshDataSetBuffer;
     da_dGeomTriMeshSetCallback dGeomTriMeshSetCallback;
+    da_dGeomTriMeshDataPreprocess dGeomTriMeshDataPreprocess;
     da_dGeomTriMeshGetCallback dGeomTriMeshGetCallback;
     da_dGeomTriMeshSetArrayCallback dGeomTriMeshSetArrayCallback;
     da_dGeomTriMeshGetArrayCallback dGeomTriMeshGetArrayCallback;
@@ -1069,8 +1066,7 @@ __gshared {
     da_dJointSetSliderParam dJointSetSliderParam;
     da_dJointAddSliderForce dJointAddSliderForce;
     da_dJointSetHinge2Anchor dJointSetHinge2Anchor;
-    da_dJointSetHinge2Axis1 dJointSetHinge2Axis1;
-    da_dJointSetHinge2Axis2 dJointSetHinge2Axis2;
+    da_dJointSetHinge2Axes dJointSetHinge2Axes;
     da_dJointSetHinge2Param dJointSetHinge2Param;
     da_dJointAddHinge2Torques dJointAddHinge2Torques;
     da_dJointSetUniversalAnchor dJointSetUniversalAnchor;
